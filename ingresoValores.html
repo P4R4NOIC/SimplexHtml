@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="formContainer" class="form-container">
+        <!-- El contenido generado se insertará aquí -->
+    </div>
+
+    <script>
+        function guardarValores(){
+            console.log("Guardando valores...");
+            // Arreglo para almacenar los coeficientes de la función objetivo
+            let funcionObjetivo = [];
+            // Arreglo para almacenar las restricciones
+            let restricciones = [];
+
+            // Obtener los valores de la función objetivo
+            for (let i = 1; i <= localStorage.getItem('cantidadVariables'); i++) {
+                let valor = document.getElementsByName('x' + i)[0].value;
+                funcionObjetivo.push(valor);
+            }
+
+            // Obtener los valores de las restricciones
+            for (let j = 1; j <= localStorage.getItem('cantidadRestricciones'); j++) {
+                let restriccion = [];
+                for (let k = 1; k <= localStorage.getItem('cantidadVariables'); k++) {
+                    let valor = document.getElementsByName('r' + j + '_' + k)[0].value;
+                    restriccion.push(valor);
+                }
+                // Agregar el valor del select (≤, ≥, =)
+                let comparador = document.getElementsByName('d' + j)[0].value;
+                restriccion.push(comparador);
+                // Agregar el valor de la constante
+                let constante = document.getElementsByName('y' + j)[0].value;
+                restriccion.push(constante);
+
+                restricciones.push(restriccion);
+            }
+
+            // Mostrar los arreglos en consola
+            console.log("Función Objetivo:", funcionObjetivo);
+            console.log("Restricciones:", restricciones);
+
+            // Aquí puedes agregar código para hacer algo con los valores, como almacenarlos en localStorage o enviarlos a un servidor
+        };
+
+        window.onload = function() {
+            // Obtiene los valores guardados en localStorage
+            var cantidadVariables = localStorage.getItem('cantidadVariables');
+            var cantidadRestricciones = localStorage.getItem('cantidadRestricciones');
+
+            // Verifica si los valores existen
+            if (cantidadVariables && cantidadRestricciones) {
+                cantidadVariables = parseInt(cantidadVariables, 10);
+                cantidadRestricciones = parseInt(cantidadRestricciones, 10);
+
+                var formContainer = document.getElementById('formContainer');
+
+                // Crea el objetivo de la funcion
+                var objectiveContainer = document.createElement('p');
+                objectiveContainer.textContent = 'Objetivo de la función:';
+                
+                var select = document.createElement('select');
+                select.name = 'funObj';
+
+                var option1 = document.createElement('option');
+                option1.value = 'max';
+                option1.textContent = 'Maximizar';
+                select.appendChild(option1);
+
+                var option2 = document.createElement('option');
+                option2.value = 'min';
+                option2.textContent = 'Minimizar';
+                select.appendChild(option2);
+                objectiveContainer.appendChild(select);
+                formContainer.appendChild(objectiveContainer);
+
+                // Crear los campos para la función
+                var functionTitle = document.createElement('p');
+                functionTitle.textContent = 'Función:';
+                formContainer.appendChild(functionTitle);
+
+                var functionContainer = document.createElement('p');
+                for (var i = 1; i <= cantidadVariables; i++) {
+                    var input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = 'x' + i;
+                    input.size = 10;
+
+                    var subindice = document.createElement('span');
+                    subindice.className = 'subindice';
+                    subindice.textContent = 'X' + i;
+
+                    functionContainer.appendChild(input);
+                    functionContainer.appendChild(subindice);
+
+                    // Agrega un "+" entre los términos, excepto después del último
+                    if (i < cantidadVariables) {
+                        functionContainer.appendChild(document.createTextNode(' + '));
+                    }
+                }
+                formContainer.appendChild(functionContainer);
+
+                // Crear los campos para las restricciones
+                var restrictionTitle = document.createElement('p');
+                restrictionTitle.textContent = 'Restricciones:';
+                formContainer.appendChild(restrictionTitle);
+
+                for (var j = 1; j <= cantidadRestricciones; j++) {
+                    var restrictionContainer = document.createElement('p');
+
+                    for (var k = 1; k <= cantidadVariables; k++) {
+                        var rInput = document.createElement('input');
+                        rInput.type = 'text';
+                        rInput.name = 'r' + j + '_' + k;
+                        rInput.size = 10;
+
+                        var rSubindice = document.createElement('span');
+                        rSubindice.className = 'subindice';
+                        rSubindice.textContent = 'X' + k;
+
+                        restrictionContainer.appendChild(rInput);
+                        restrictionContainer.appendChild(rSubindice);
+
+                        // Agrega un "+" entre los términos, excepto después del último
+                        if (k < cantidadVariables) {
+                            restrictionContainer.appendChild(document.createTextNode(' + '));
+                        }
+                    }
+
+                    // Agregar el selector para la comparación
+                    var select = document.createElement('select');
+                    select.name = 'd' + j;
+
+                    var option1 = document.createElement('option');
+                    option1.value = '-1';
+                    option1.textContent = '≤';
+                    select.appendChild(option1);
+
+                    var option2 = document.createElement('option');
+                    option2.value = '1';
+                    option2.textContent = '≥';
+                    select.appendChild(option2);
+
+                    var option3 = document.createElement('option');
+                    option3.value = '0';
+                    option3.textContent = '=';
+                    select.appendChild(option3);
+
+                    restrictionContainer.appendChild(select);
+
+                    // Agregar el campo para el valor a comparar
+                    var yInput = document.createElement('input');
+                    yInput.type = 'text';
+                    yInput.name = 'y' + j;
+                    yInput.size = 10;
+
+                    restrictionContainer.appendChild(yInput);
+
+                    formContainer.appendChild(restrictionContainer);
+                }
+
+                // Crear el botón "Continuar"
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.onclick = guardarValores; // Pasar la referencia de la función
+                button.textContent = 'Continuar';
+                formContainer.appendChild(button);
+
+            } else {
+                alert('No se encontraron valores guardados en localStorage.');
+            }
+        };
+    </script>
+</body>
+</html>

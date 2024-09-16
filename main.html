@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>Simplex</title>
+</head>
+<body>
+    <div class="form-container">
+        <form action="">
+            <div>
+                <label for="var">Cantidad de variables</label>
+                <input type="text" id="var" name="var">
+            </div>
+            <div>
+                <label for="res">Cantidad de restricciones</label>
+                <input type="text" id="res" name="res">
+            </div>
+            <div>
+                <button type="button" onclick="ingresarValores()">Continuar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function ingresarValores() {
+            // Obtén los valores de los campos de entrada
+            var variables = document.getElementById('var').value;
+            var restricciones = document.getElementById('res').value;
+            
+            if (isNaN(variables) || isNaN(restricciones) || variables.trim() === "" || restricciones.trim() === "") {
+                console.log('Por favor, ingresa valores numéricos para las variables y restricciones.');
+                return; // Detiene la ejecución si los valores no son válidos
+            }
+
+            if (Number(variables) <= 0 || Number(restricciones) <= 0) {
+                console.log('Por favor, ingresa valores numéricos positivos para las variables y restricciones.');
+                return; // Detiene la ejecución si los valores son negativos
+            }
+
+            // Guarda los valores en el localStorage
+            localStorage.setItem('cantidadVariables', variables);
+            localStorage.setItem('cantidadRestricciones', restricciones);
+
+            // Muestra un mensaje de confirmación (opcional)
+            console.log('Valores guardados: \nVariables: ' + variables + '\nRestricciones: ' + restricciones);
+            window.location.href = "ingresoValores.html";
+        }
+    </script>
+</body>
+
+</html>
