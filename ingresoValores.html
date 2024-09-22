@@ -11,44 +11,8 @@
         <!-- El contenido generado se insertará aquí -->
     </div>
 
+    <script src="ingresoValores.js"></script>
     <script>
-        function guardarValores(){
-            console.log("Guardando valores...");
-            // Arreglo para almacenar los coeficientes de la función objetivo
-            let funcionObjetivo = [];
-            // Arreglo para almacenar las restricciones
-            let restricciones = [];
-
-            // Obtener los valores de la función objetivo
-            for (let i = 1; i <= localStorage.getItem('cantidadVariables'); i++) {
-                let valor = document.getElementsByName('x' + i)[0].value;
-                funcionObjetivo.push(valor);
-            }
-
-            // Obtener los valores de las restricciones
-            for (let j = 1; j <= localStorage.getItem('cantidadRestricciones'); j++) {
-                let restriccion = [];
-                for (let k = 1; k <= localStorage.getItem('cantidadVariables'); k++) {
-                    let valor = document.getElementsByName('r' + j + '_' + k)[0].value;
-                    restriccion.push(valor);
-                }
-                // Agregar el valor del select (≤, ≥, =)
-                let comparador = document.getElementsByName('d' + j)[0].value;
-                restriccion.push(comparador);
-                // Agregar el valor de la constante
-                let constante = document.getElementsByName('y' + j)[0].value;
-                restriccion.push(constante);
-
-                restricciones.push(restriccion);
-            }
-
-            // Mostrar los arreglos en consola
-            console.log("Función Objetivo:", funcionObjetivo);
-            console.log("Restricciones:", restricciones);
-
-            // Aquí puedes agregar código para hacer algo con los valores, como almacenarlos en localStorage o enviarlos a un servidor
-        };
-
         window.onload = function() {
             // Obtiene los valores guardados en localStorage
             var cantidadVariables = localStorage.getItem('cantidadVariables');
@@ -69,12 +33,12 @@
                 select.name = 'funObj';
 
                 var option1 = document.createElement('option');
-                option1.value = 'max';
+                option1.value = '1';
                 option1.textContent = 'Maximizar';
                 select.appendChild(option1);
 
                 var option2 = document.createElement('option');
-                option2.value = 'min';
+                option2.value = '0';
                 option2.textContent = 'Minimizar';
                 select.appendChild(option2);
                 objectiveContainer.appendChild(select);
@@ -165,11 +129,82 @@
                     formContainer.appendChild(restrictionContainer);
                 }
 
+                // Crear los campos para las restricciones
+                var noNegTitle = document.createElement('p');
+                noNegTitle.textContent = 'No negatividad:';
+                formContainer.appendChild(noNegTitle);
+
+                // Generar elementos para cada variable
+                for (let i = 1; i <= cantidadVariables; i++) {
+                    // Crear el párrafo
+                    const p = document.createElement('p');
+                    
+                    // Crear el texto X1, X2, etc.
+                    const variableText = document.createTextNode('X');
+                    p.appendChild(variableText);
+                    
+                    // Crear el subíndice
+                    const subindice = document.createElement('span');
+                    subindice.className = 'subindice';
+                    subindice.textContent = i;
+                    p.appendChild(subindice);
+                    
+                    // Crear el selector para elegir solo ≥ o "sin límite"
+                    const select = document.createElement('select');
+                    select.name = 'n' + i;
+                    const opciones = [
+                        { text: '≥', value: 1 },
+                        { text: 'sin límite', value: 0 }
+                    ];
+
+                    opciones.forEach(opcion => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = opcion.value; // Asigna el valor 1 o 0
+                        optionElement.textContent = opcion.text; // Asigna el texto '≥' o 'sin límite'
+                        select.appendChild(optionElement);
+                    });
+                    p.appendChild(select);
+                    
+                    // Crear el input para el valor (editable)
+                    const inputValor = document.createElement('input');
+                    inputValor.name = 'z' + i;
+                    inputValor.type = 'number';
+                    inputValor.value = '0'; // Valor inicial
+                    inputValor.className = 'valor';
+                    inputValor.min = '-Infinity'; // Permitir valores negativos
+                    p.appendChild(inputValor);
+
+                    // Agregar el párrafo al contenedor
+                    formContainer.appendChild(p);
+                    
+                    // Escuchar cambios en el selector para mostrar/ocultar el input cuando se elige "sin límite"
+                    select.addEventListener('change', (event) => {
+                        if (event.target.value === '0') {
+                            inputValor.style.display = 'none'; // Oculta el input
+                        } else {
+                            inputValor.style.display = ''; // Muestra el input
+                        }
+                    });
+                    
+                    // Validar que solo se permitan números negativos o 0 en el input
+                    inputValor.addEventListener('input', (event) => {
+                        if (event.target.value > 0) {
+                            event.target.value = 0;
+                        }
+                    });
+                }
+
                 // Crear el botón "Continuar"
                 var button = document.createElement('button');
                 button.type = 'button';
-                button.onclick = guardarValores; // Pasar la referencia de la función
+                button.onclick = validarEntrada; 
                 button.textContent = 'Continuar';
+                formContainer.appendChild(button);
+
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.onclick = function() {window.location.href = "main.html";};
+                button.textContent = 'Volver';
                 formContainer.appendChild(button);
 
             } else {
