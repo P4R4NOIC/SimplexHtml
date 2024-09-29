@@ -1,22 +1,38 @@
-
 //----------------------------------------------------------------------
-let BVS = ["z", "s3", "s4", "s5"];
-let variables = ["x1","x2", "s3", "s4", "s5"];
-let matriz = [[-15, -10, 0, 0, 0, 0], 
-        [1, 0, 1, 0, 0, 2], 
-        [0, 1, 0, 1, 0, 3],
-        [1, 1, 0, 0, 1, 4]];
-let filaZ = 0;
+// let BVS = ["z", "s3", "s4", "s5"];
+let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
+console.log(BVS);
+// let variables = ["x1","x2", "s3", "s4", "s5"];
+let variables = JSON.parse(localStorage.getItem('arregloVariables'));
+console.log(variables);
+// let matriz = [[-15, -10, 0, 0, 0, 0], 
+//         [1, 0, 1, 0, 0, 2], 
+//         [0, 1, 0, 1, 0, 3],
+//         [1, 1, 0, 0, 1, 4]];
+let matriz = JSON.parse(localStorage.getItem('matriz'));
+console.log(matriz);
+let filaZ = +localStorage.getItem('filaZ');
 let row;
 let col;
-let M = 1000;
-let FoG = 0;
+//let M = 1000;
+let solve = 0;
+let M = +localStorage.getItem('BIGNUMBER');
+// let FoG = 0;
+let FoG = +localStorage.getItem('metodoSolucionFinal');
 resumenIteracion =[];
-simplexIteracionBase();
-console.log(BVS);
-console.log(matriz);
-addIteracionResume();
-console.log(resumenIteracion);
+
+function inicio(){
+  
+  simplexIteracionBase();
+  console.log(BVS);
+  console.log(matriz);
+  addIteracionResume();
+  console.log(resumenIteracion);
+  localStorage.setItem('arregloVariablesBasicas', JSON.stringify(BVS));
+  localStorage.setItem('matriz', JSON.stringify(matriz));
+
+  location.reload();
+}
 
 function opRow(row1, row2, n){
   let mTemp = matriz[row1].slice();
@@ -252,8 +268,3 @@ function simplex(){
   addIteracionResume();
 
 }
-
-
-
-
-

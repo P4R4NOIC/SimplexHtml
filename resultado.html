@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="formContainer" class="form-container"></div>
+        <!-- El contenido generado se insertará aquí -->
+    </div>
+    <script src="simplex.js"></script>
+    <script>
+        window.onload = function() {
+            // Obtener los datos de localStorage
+            let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
+            let variables = JSON.parse(localStorage.getItem('arregloVariables'));
+            let matriz = JSON.parse(localStorage.getItem('matriz'));
+    
+            var formContainer = document.getElementById('formContainer');
+
+            // Verificar si los datos se obtuvieron correctamente
+            if (BVS && variables && matriz) {
+                // Crear la tabla
+                let table = document.createElement('table');
+                table.setAttribute('border', '1');
+                let tbody = document.createElement('tbody');
+    
+                // Crear la fila de encabezado con las variables
+                let headerRow = document.createElement('tr');
+                let emptyCell = document.createElement('th');
+                headerRow.appendChild(emptyCell);  // Célula vacía en la esquina superior izquierda
+                variables.forEach(function(variable) {
+                    let th = document.createElement('th');
+                    th.textContent = variable;
+                    headerRow.appendChild(th);
+                });
+                let rhs = document.createElement('th');
+                rhs.textContent = 'RHS';
+                headerRow.appendChild(rhs);
+                tbody.appendChild(headerRow);
+    
+                // Crear las filas de la matriz con las variables básicas
+                BVS.forEach(function(bvs, rowIndex) {
+                    let row = document.createElement('tr');
+    
+                    // Crear la primera célula con la variable básica
+                    let th = document.createElement('th');
+                    th.textContent = bvs;
+                    row.appendChild(th);
+    
+                    // Añadir los valores de la matriz en esa fila
+                    matriz[rowIndex].forEach(function(value) {
+                        let td = document.createElement('td');
+                        td.textContent = value;
+                        row.appendChild(td);
+                    });
+    
+                    tbody.appendChild(row);
+                });
+    
+                // Añadir el tbody a la tabla y la tabla al documento
+                table.appendChild(tbody);
+                formContainer.appendChild(table);
+            } else {
+                console.error("No se encontraron los datos en localStorage");
+            }
+            
+            // Crear el botón "Continuar"
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.onclick = inicio; 
+            button.textContent = 'Continuar';
+            formContainer.appendChild(button);
+
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.onclick = function() {window.location.href = "main.html";};
+            button.textContent = 'Volver al inicio';
+            formContainer.appendChild(button);
+        };
+    </script>
+    
+</body>
+</html>

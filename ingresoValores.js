@@ -197,7 +197,9 @@ function guardarValores(){
     }else{
         arregloVariablesBasicas.push("-z");
     }
-    let BIGNUMBER = 100;
+    let BIGNUMBER = Math.max(...restricciones.flat()) * 100;
+    localStorage.setItem('BIGNUMBER', BIGNUMBER);
+
     restricciones = crearMatriz(realVarSize, +cantidadRestricciones);
     restricciones = rellenarMatriz(realVarSize, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion);
 
@@ -229,23 +231,35 @@ function guardarValores(){
         }
     }
 
+    localStorage.setItem('metodoSolucionFinal', 0);
+    if(metodoSolucion==0 && sizeArtif!= 0){
+        localStorage.setItem('metodoSolucionFinal', 1);
+    }
+    if(metodoSolucion==1 && sizeArtif!= 0){
+        localStorage.setItem('metodoSolucionFinal', 2);
+    }
+
     // Mostrar los arreglos en consola
     console.log("Max=1 o Min=0: ", objetivoFuncion);
     console.log("Suma a Z: ", sumaAZeta);
     console.log("Arreglo P: ", arregloP);
     console.log("Arreglo variables:", arregloVariables);
     console.log("Arreglo BVS:", arregloVariablesBasicas);
+    localStorage.setItem('filaZ', 0);
     if(metodoSolucion==0 && sizeArtif!= 0){
         console.log("Fila -w:", arregloW);
+        localStorage.setItem('filaZ', 1);
     }
     console.log("Fila Z:", arrObj);
     console.log("Restricciones:", restricciones);
 
     localStorage.setItem('objetivoFuncion', objetivoFuncion);
     localStorage.setItem('sumaAZeta', sumaAZeta);
-    localStorage.setItem('arregloVariables', arregloVariables);
-    localStorage.setItem('arregloVariablesBasicas', arregloVariablesBasicas);
-    localStorage.setItem('matriz', restricciones);
+    localStorage.setItem('arregloVariables', JSON.stringify(arregloVariables));
+    localStorage.setItem('arregloVariablesBasicas', JSON.stringify(arregloVariablesBasicas));
+    localStorage.setItem('matriz', JSON.stringify(restricciones));
+    
+    window.location.href = "resultado.html";
 };
 
 function validarEntrada(){
