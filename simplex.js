@@ -12,6 +12,7 @@ console.log(variables);
 let matriz = JSON.parse(localStorage.getItem('matriz'));
 console.log(matriz);
 let filaZ = +localStorage.getItem('filaZ');
+console.log("FILAZ: ", filaZ);
 let row;
 let col;
 //let M = 1000;
@@ -19,10 +20,19 @@ let solve = 0;
 let M = +localStorage.getItem('BIGNUMBER');
 // let FoG = 0;
 let FoG = +localStorage.getItem('metodoSolucionFinal');
+console.log("FOG: ", FoG);
 resumenIteracion =[];
 
 function inicio(){
-  
+  if(FoG == 1){
+    for (let i = filaZ; i < BVS.length;i++){
+      if (BVS[i][0] == "a"){
+        opRow(i, filaZ-1, -1); 
+        console.log("entre", i, matriz);
+        FoG = 0;
+      }
+    }
+  }
   simplexIteracionBase();
   console.log(BVS);
   console.log(matriz);
@@ -31,7 +41,7 @@ function inicio(){
   localStorage.setItem('arregloVariablesBasicas', JSON.stringify(BVS));
   localStorage.setItem('matriz', JSON.stringify(matriz));
 
-  location.reload();
+  //location.reload();
 }
 
 function opRow(row1, row2, n){
@@ -130,7 +140,8 @@ function simplexPreFaseGranM(){
   if(FoG == 1){
     for (let i = filaZ; i < BVS.length;i++){
       if (BVS[i][0] == "a"){
-        opRow(i, 0, -1); 
+        opRow(2, filaZ-1, -2); 
+        console.log("entre", i, matriz);
         FoG = 0;
       }
     }
@@ -142,6 +153,7 @@ function simplexPreFaseGranM(){
       }
     }
   }
+  localStorage.setItem('metodoSolucionFinal', FoG);
 }
 
 function addIteracionResume(){
@@ -246,13 +258,14 @@ function simplexIteracionBase(){
     console.log("no es acotado");
     return;
   }
-  BVS[row-filaZ] = variables[col];
+  BVS[row] = variables[col];
   opRow(row, null, 1/matriz[row][col]);
   for (let i = 0; i< matriz.length;i++){
     if (i!=row){
       opRow(row, i, -(matriz[i][col]));
     }
   }
+  console.log("matriz despues", matriz);
   
 
 }
@@ -261,10 +274,10 @@ function simplex(){
   if (FoG){
     simplexPreFaseGranM();
   }
-  if (checkNextFase()){
+  /*if (checkNextFase()){
     processMatrix();
   }
   simplexIteracionBase();
-  addIteracionResume();
+  addIteracionResume();*/
 
 }
