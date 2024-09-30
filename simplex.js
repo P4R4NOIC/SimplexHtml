@@ -4,6 +4,7 @@ let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
 console.log(BVS);
 // let variables = ["x1","x2", "s3", "s4", "s5"];
 let variables = JSON.parse(localStorage.getItem('arregloVariables'));
+const varOriginal = variables;
 console.log(variables);
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
@@ -24,16 +25,28 @@ console.log("FOG: ", FoG);
 resumenIteracion =[];
 
 function inicio(){
-  if(FoG == 1){
-    for (let i = filaZ; i < BVS.length;i++){
-      if (BVS[i][0] == "a"){
-        opRow(i, filaZ-1, -1); 
-        console.log("entre", i, matriz);
-        FoG = 0;
+  if (FoG){ // dos fases o gran M
+    if (FoG == 3){ // si ya pre proceso
+      let cnf = checkNextFase();
+      if(cnf == 1){// para modificar matriz
+        processToNextFase();
+      }else{
+        if (cnf == 0){
+          simplexIteracionBase();  
+        }else{
+          darRespuesta(5);//infactible
+        }
       }
+    }else{ // si no preprocese y asigne 3
+      simplexPreFaseGranM();
     }
+  }else{ // si no iteracion normal
+    simplexIteracionBase();  
   }
-  simplexIteracionBase();
+  //addIteracionResume();
+
+  //simplexPreFaseGranM();
+  //simplexIteracionBase();
   console.log(BVS);
   console.log(matriz);
   addIteracionResume();
@@ -96,6 +109,9 @@ function escogeEntra(){
   }  
   if(min<0){ 
     return columna;
+  }
+  if (matriz[0][matriz[0].length-1]<0){
+    return -2;
   }  
   return -1;
 }
@@ -140,16 +156,15 @@ function simplexPreFaseGranM(){
   if(FoG == 1){
     for (let i = filaZ; i < BVS.length;i++){
       if (BVS[i][0] == "a"){
-        opRow(2, filaZ-1, -2); 
-        console.log("entre", i, matriz);
-        FoG = 0;
+        opRow(i, 0, -1); 
+        FoG = 3;
       }
     }
   }else{
     for (let i = filaZ; i < BVS.length;i++){
       if (BVS[i][0] == "a"){
         opRow(i, 0, -M); 
-        FoG = 0;
+        FoG = 3;
       }
     }
   }
@@ -158,12 +173,12 @@ function simplexPreFaseGranM(){
 
 function addIteracionResume(){
   let iteracion = [];
-  for (let i = 0; i < variables.length; i++) {
+  for (let i = 0; i < varOriginal.length; i++) {
     iteracion.push(0);
   }
   for(let j = filaZ+1; j < BVS.length; j++){
-    for (let i = 0; i < variables.length; i++) {
-      if (variables[i]== BVS[j]){
+    for (let i = 0; i < varOriginal.length; i++) {
+      if (varOriginal[i] == BVS[j]){
         iteracion[i]= matriz[j][matriz[0].length-1];
         break;
       }
@@ -193,10 +208,10 @@ function simplexDosFases(){
 
 function desplegarSoluciones(){
   console.log(resumenIteracion[resumenIteracion.length-1]);
-  for(let i = 0; i < variables.length; i++){
+  for(let i = 0; i < varOriginal.length; i++){
     let keepGoing = 0;
     for (let j = filaZ+1; j < BVS.length; j++) {
-      if (variables[i]== BVS[j]){
+      if (varOriginal[i]== BVS[j]){
         console.log("basica");
         console.log(resumenIteracion[i]);
         keepGoing = 1;
@@ -207,7 +222,7 @@ function desplegarSoluciones(){
       keepGoing = 0;
       break;
     }
-    console.log(resumenIteracion[i]);
+    //console.log(resumenIteracion[i]);
   }
 }
 
@@ -225,10 +240,11 @@ function darRespuesta(r){
     console.log("problema no acotado\n");
   }
   if (r == 5){
-    console.log("5\n");
+    console.log("Problema infactible RHS negativo al final de la primera Fase\n");
   }
   if (r == 6){
     console.log("La Solucion es \n");
+    desplegarSoluciones();
     console.log(resumenIteracion);
   }
 }
@@ -247,10 +263,16 @@ function simplexIteracionBase(){
   }else{
     col = escogeEntra();
   }
-  if (col == -1){
+  if (col == -2){
     darRespuesta(3);
     console.log("error variable entrante\n");
     return; //no hay variables negativas para escoger
+  }
+  if (col == -1){
+    solve = 1;
+    darRespuesta(6);
+    console.log("solucion encontrada\n");
+    return; //existe una solucion
   }
   row = escogeSale();
   if (row == -1){
@@ -269,15 +291,44 @@ function simplexIteracionBase(){
   
 
 }
-
-function simplex(){
-  if (FoG){
-    simplexPreFaseGranM();
+function processToNextFase(){
+  let mTemp = [];
+  let fTemp = [];
+  let bvsTemp = [];
+  let varTemp = [];
+  let flag = 1;
+  for (let i = filaZ; i < matriz.length; i++){
+    for (let j = 0; j < matriz[0].length-1; j++){
+      if (varOriginal[j][0] != "a"){
+        fTemp.push(matriz[i][j]);
+        if (flag){
+          varTemp.push(varOriginal[j]);
+        }
+      }
+    }
+    flag = 0;
+    fTemp.push(matriz[i][matriz[0].length-1]);
+    mTemp.push(fTemp);
+    bvsTemp.push(BVS[i]);
   }
-  /*if (checkNextFase()){
-    processMatrix();
+  BVS = bvsTemp;
+  if (filaZ){
+    filaZ--;
   }
-  simplexIteracionBase();
-  addIteracionResume();*/
-
+  variables = varTemp;
+  matriz = mTemp;
+  FoG = 0;
 }
+
+function checkNextFase(){
+  for (let i = 0 ; i < varOriginal.length; i++){
+    if (resumenIteracion[resumenIteracion.length-1][i] < 0){
+      return 0;
+    }
+  }
+  if (resumenIteracion[resumenIteracion.length-1][resumenIteracion[0].length-1] != 0){
+    return -1;
+  }
+  return 1;
+}
+
