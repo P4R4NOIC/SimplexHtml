@@ -76,11 +76,11 @@ function opRow(row1, row2, n){
   }
   return; 
 }
-/*
-function escogeSaleMulSol(){
-  for (int i= 0; i < matriz[0].length;i++){
+
+function escogeEntraMulSol(){
+  for (let i= 0; i < matriz[0].length;i++){
     let keepGoing = 0;
-    for (int j= 0; j < BVS.length;j++){
+    for (let j= 0; j < BVS.length;j++){
       if(variables[i] == BVS[j]){
         keepGoing = 1;
         break;
@@ -95,7 +95,7 @@ function escogeSaleMulSol(){
   }
   return -1;
 }
-*/
+
 
 function escogeEntra(){
   let min = 1000;
@@ -253,7 +253,7 @@ function darRespuesta(r){
 function simplexIteracionBase(){
   if (solve){
     if (nSol != 0){
-      col = escogeSaleMulSol();
+      col = escogeEntraMulSol();
       if (col == -1){
         darRespuesta(1); //no se pueden dar mas soluciones
       }
