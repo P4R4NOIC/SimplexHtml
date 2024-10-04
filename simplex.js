@@ -4,7 +4,7 @@ let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
 console.log(BVS);
 // let variables = ["x1","x2", "s3", "s4", "s5"];
 let variables = JSON.parse(localStorage.getItem('arregloVariables'));
-const varOriginal = variables;
+let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
 console.log(variables);
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
@@ -22,12 +22,32 @@ let M = +localStorage.getItem('BIGNUMBER');
 // let FoG = 0;
 let FoG = +localStorage.getItem('metodoSolucionFinal');
 console.log("FOG: ", FoG);
-resumenIteracion =[];
+let resumenIteracion = JSON.parse(localStorage.getItem('resumenIteracion'));
+
+
+function checkNextFase(){
+  if (resumenIteracion.length == 0){
+    console.log("check 0");
+    return 0;
+  }
+  for (let i = 0 ; i < varOriginal.length; i++){
+    if ((matriz[0][i]) < 0){
+      console.log("check 1");
+      return 0;
+    }
+  }
+  if (matriz[0][matriz[0].length-1] != 0){
+    return -1;
+  }
+  return 1;
+}
+
 
 function inicio(){
   if (FoG){ // dos fases o gran M
     if (FoG == 3){ // si ya pre proceso
       let cnf = checkNextFase();
+      //console.log("cnf",cnf);
       if(cnf == 1){// para modificar matriz
         processToNextFase();
       }else{
@@ -39,21 +59,20 @@ function inicio(){
       }
     }else{ // si no preprocese y asigne 3
       simplexPreFaseGranM();
+      addIteracionResume();
     }
   }else{ // si no iteracion normal
     simplexIteracionBase();  
   }
   //addIteracionResume();
-
+  
+  localStorage.setItem('arregloVariablesBasicas', JSON.stringify(BVS));
+  localStorage.setItem('matriz', JSON.stringify(matriz));
   //simplexPreFaseGranM();
   //simplexIteracionBase();
   console.log(BVS);
   console.log(matriz);
-  addIteracionResume();
-  console.log(resumenIteracion);
-  localStorage.setItem('arregloVariablesBasicas', JSON.stringify(BVS));
-  localStorage.setItem('matriz', JSON.stringify(matriz));
-
+  console.log("resumenIteracion: ", resumenIteracion);
   //location.reload();
 }
 
@@ -172,6 +191,7 @@ function simplexPreFaseGranM(){
 }
 
 function addIteracionResume(){
+  
   let iteracion = [];
   for (let i = 0; i < varOriginal.length; i++) {
     iteracion.push(0);
@@ -186,6 +206,8 @@ function addIteracionResume(){
   }
   iteracion.push(matriz[filaZ][matriz[0].length-1]);
   resumenIteracion.push(iteracion);
+  localStorage.setItem('resumenIteracion', JSON.stringify(resumenIteracion));
+  
 }
 
 
@@ -286,22 +308,24 @@ function simplexIteracionBase(){
     if (i!=row){
       opRow(row, i, -(matriz[i][col]));
     }
-  }
+  }  
+  addIteracionResume();
   console.log("matriz despues", matriz);
   
 
 }
 function processToNextFase(){
   let mTemp = [];
-  let fTemp = [];
   let bvsTemp = [];
   let varTemp = [];
   let flag = 1;
   for (let i = filaZ; i < matriz.length; i++){
+    let fTemp = [];
     for (let j = 0; j < matriz[0].length-1; j++){
       if (varOriginal[j][0] != "a"){
         fTemp.push(matriz[i][j]);
         if (flag){
+          console.log("varOriginal[j]:", varOriginal[j]);
           varTemp.push(varOriginal[j]);
         }
       }
@@ -318,17 +342,10 @@ function processToNextFase(){
   variables = varTemp;
   matriz = mTemp;
   FoG = 0;
+  localStorage.setItem('arregloVariables', JSON.stringify(variables));
+  localStorage.setItem('filaZ', filaZ);
+  localStorage.setItem('metodoSolucionFinal', FoG);
 }
 
-function checkNextFase(){
-  for (let i = 0 ; i < varOriginal.length; i++){
-    if (resumenIteracion[resumenIteracion.length-1][i] < 0){
-      return 0;
-    }
-  }
-  if (resumenIteracion[resumenIteracion.length-1][resumenIteracion[0].length-1] != 0){
-    return -1;
-  }
-  return 1;
-}
+
 

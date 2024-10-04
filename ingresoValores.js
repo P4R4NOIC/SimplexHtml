@@ -99,6 +99,7 @@ function guardarValores(){
     let restricciones = [];
     let arregloVariables = [];
     let arregloVariablesBasicas = [];
+    let resumenIteracion = [];
 
     // Creador de -w
     // Checar si es metodo de GranM o dos fases
@@ -114,9 +115,11 @@ function guardarValores(){
     let cantidadVariables = localStorage.getItem('cantidadVariables');
     let cantidadRestricciones = localStorage.getItem('cantidadRestricciones');
     let metodoSolucion = localStorage.getItem('metodoSolucion');
+    
 
     let arregloP = [];
     let sumaAZeta = 0;
+
 
     // Chequeo de limites negativos
     for (let i = 1; i <= +cantidadVariables; i++) {
@@ -256,8 +259,10 @@ function guardarValores(){
     localStorage.setItem('objetivoFuncion', objetivoFuncion);
     localStorage.setItem('sumaAZeta', sumaAZeta);
     localStorage.setItem('arregloVariables', JSON.stringify(arregloVariables));
+    localStorage.setItem('varOriginal', JSON.stringify(arregloVariables));
     localStorage.setItem('arregloVariablesBasicas', JSON.stringify(arregloVariablesBasicas));
     localStorage.setItem('matriz', JSON.stringify(restricciones));
+    localStorage.setItem('resumenIteracion', JSON.stringify(resumenIteracion));
     
     window.location.href = "resultado.html";
 };
