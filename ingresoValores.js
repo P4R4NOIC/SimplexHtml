@@ -107,6 +107,7 @@ function guardarValores(){
     // 1 = Gran M
     let arregloW = [];
 
+    // MAX OR MIN
     let objetivoFuncion = +document.getElementsByName('funObj')[0].value;
 
     let sizeHolgura = 0;
@@ -289,4 +290,109 @@ function validarEntrada(){
     // Si todo es correcto, continuar con el flujo
     alert("Todos los campos son válidos.");
     guardarValores();
+}
+
+function obtenerDistintos(cantidadRestricciones){
+    let distintos = -1;
+    let menores = 0;
+    let mayores = 0;
+    for (let i = 1; i <= cantidadRestricciones; i++) {
+        let comparador = document.getElementsByName('d' + i)[0].value;
+        if(comparador == -1){
+            menores++;  
+        }
+        if(comparador == 1){
+            mayores++;  
+        }
+    }
+    if(menores<mayores){
+        distintos = 1;
+    }
+    return distintos;
+}
+
+function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos){
+
+    //Relleno normal
+    for (let i = 1; i <= cantidadRestricciones; i++) {
+        let array = [];
+        let comparador = document.getElementsByName('d' + i)[0].value;
+    
+        for (let j = 1; j <= cantidadVariables; j++) {
+            let valor = +document.getElementsByName('r' + i + '_' + j)[0].value;
+            if(comparador != distintos && comparador != 0){valor = valor*-1}
+            array.push(valor);
+        }  
+        matriz.push(array);
+
+        valor = +document.getElementsByName('y'+i)[0].value;
+        if(comparador != distintos && comparador != 0){valor = valor*-1}
+        funObj.push(valor);
+    }
+
+    //Transpuesta
+    matriz = matriz[0].map((col, i) => matriz.map(row => row[i]));
+    for (let i = 1; i <= cantidadVariables; i++) {
+        let valor = +document.getElementsByName('x'+i)[0].value;
+        matriz[i-1].push(valor);
+    }
+    return matriz;
+}
+
+function calcularDual(){
+    // Obtener todos los inputs del formulario
+    let inputs = document.querySelectorAll('input[type="text"]');
+
+    // Recorrer todos los inputs para validar
+    for (let i = 0; i < inputs.length; i++) {
+        let valor = inputs[i].value.trim();
+
+        // Si el campo está vacío, reemplazarlo por 0
+        if (valor === '') {
+            inputs[i].value = '0';
+        } else if (isNaN(valor)) {
+            // Si no es un número, mostrar una alerta
+            alert("Por favor, asegúrate de que todos los campos contengan solo números.");
+            inputs[i].focus(); // Coloca el cursor en el input incorrecto
+            return false; // Detiene la validación
+        }
+    }
+
+    let cantidadVariables = +localStorage.getItem('cantidadVariables');
+    let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
+    let matriz = [];
+    let funObj = [];
+    let distintos = obtenerDistintos(cantidadRestricciones);
+    matriz = matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos);
+    let objetivoFuncion = +document.getElementsByName('funObj')[0].value;
+    console.log(matriz);
+    
+    let var1 = "max z = ";
+    if(objetivoFuncion){
+        var1 = "min z = ";
+    }
+    for (let i = 0; i < cantidadRestricciones; i++) {
+        var1 += funObj[i] + "y" + (i + 1);  
+        if (i < cantidadRestricciones - 1) {
+            var1 += " + ";  
+        }
+    }
+
+    let var2 = "";
+    let bocas = " >= ";
+    if(distintos==1){bocas = " <= "}
+    for (let i = 0; i < matriz.length; i++) {
+        for (let j = 0; j < matriz[i].length - 1; j++) {
+            var2 += matriz[i][j] + "y" + (j + 1);
+            if (j < matriz[i].length - 2) {
+                var2 += " + ";  
+            }
+        }
+        var2 += ""+bocas + matriz[i][matriz[i].length - 1];
+        if (i < matriz.length - 1) {
+            var2 += "\n";  
+        }
+    }
+    console.log(var1);
+    console.log(var2);
 }

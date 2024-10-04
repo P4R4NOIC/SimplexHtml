@@ -203,6 +203,12 @@
 
                 var button = document.createElement('button');
                 button.type = 'button';
+                button.onclick = calcularDual;
+                button.textContent = 'DUAL';
+                formContainer.appendChild(button);
+
+                var button = document.createElement('button');
+                button.type = 'button';
                 button.onclick = function() {window.location.href = "main.html";};
                 button.textContent = 'Volver';
                 formContainer.appendChild(button);
