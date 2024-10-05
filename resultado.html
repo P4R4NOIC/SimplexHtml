@@ -118,6 +118,7 @@
                 resumenTable.setAttribute('border', '1');
                 let resumenTbody = document.createElement('tbody');
 
+                variables = JSON.parse(localStorage.getItem("varOriginal"));
                 // Crear la fila de encabezado con las variables
                 let resumenHeaderRow = document.createElement('tr');
                 variables.forEach(function(variable) {
