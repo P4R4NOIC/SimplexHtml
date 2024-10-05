@@ -17,7 +17,7 @@ body {
 
 /* Estilos para el contenedor del formulario */
 #formContainer {
-    background-color: #ffffff;
+    background-color: #99d16d;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -30,6 +30,7 @@ body {
 p {
     font-size: 16px;
     margin: 10px 0;
+    
 }
 
 label {
@@ -40,18 +41,25 @@ label {
 input[type="text"], input[type="number"], select {
     padding: 8px;
     margin: 5px 0;
-    border: 1px solid #ddd; /* Color más claro */
+    border: 1px solid #99d16d; /* Color de borde */
+    background-color: whitesmoke; /* Color de fondo */
     border-radius: 5px;
     box-sizing: border-box;
 }
 
-input[type="text"]:focus, input[type="number"]:focus, select:focus {
-    border-color: #86c55a; /* Color verde más oscuro al enfocar */
+select:focus, input[type="text"]:focus {
+    border-color: #99d16d; /* Borde al hacer foco */
+    background-color: rgba(245, 245, 245, 0.616); /* Color de fondo al hacer foco */
+    outline: none;
+}
+
+select{
+    color: #86c55a;
 }
 
 /* Estilos para los botones */
 button {
-    background-color: #99d16d; /* Verde suave */
+    background-color: #f28f8f; /* Verde suave */
     color: white;
     padding: 10px 15px;
     border: none;
@@ -62,7 +70,7 @@ button {
 }
 
 button:hover {
-    background-color: #86c55a; /* Verde más oscuro */
+    background-color: #c9302c; /* Verde más oscuro */
 }
 
 /* Subíndices en las variables */
