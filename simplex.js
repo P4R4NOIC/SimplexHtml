@@ -31,18 +31,35 @@ console.log("resumenIteracion: ", resumenIteracion);
 
 
 function checkNextFase(){
-  if (resumenIteracion.length == 0){
-    console.log("check 0");
-    return 0;
-  }
-  for (let i = 0 ; i < varOriginal.length; i++){
-    if ((matriz[0][i]) < 0){
-      console.log("check 1");
+  if(filaZ){
+    if (resumenIteracion.length == 0){
+      console.log("check 0");
       return 0;
     }
-  }
-  if (matriz[0][matriz[0].length-1] != 0){
-    return -1;
+    for (let i = 0 ; i < varOriginal.length; i++){
+      if ((matriz[0][i]) < 0){
+        console.log("check 1");
+        return 0;
+      }
+    }
+    if (matriz[0][matriz[0].length-1] != 0){
+      return -1;
+    }
+  }else{
+    for(let i = 0; i < varOriginal.length; i++){
+      if(varOriginal[i][0] == "a"){
+        let count= 0;
+        for (let j = 0; j < BVS.length; j++) {
+          if (matriz[j][i] != 0){
+            count++;
+          }
+        }
+        if (count == 1){
+          return 0;
+        }
+      }
+    }
+
   }
   return 1;
 }
