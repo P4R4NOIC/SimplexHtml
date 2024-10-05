@@ -294,6 +294,8 @@ function simplexIteracionBase(){
       col = escogeEntraMulSol();
       if (col == -1){
         darRespuesta(1); //no se pueden dar mas soluciones
+        nSol = 0;
+        localStorage.setItem('cantidadSoluciones', nSol);
         return;
       }
       nSol--;
