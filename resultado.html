@@ -82,9 +82,10 @@
             // Crear el botón "Continuar"
             var continueButton = document.createElement('button');
             continueButton.type = 'button';
-            let bandera = localStorage.getItem("bandera");
+            let bandera = +localStorage.getItem("bandera");
+            let nSol = +localStorage.getItem("cantidadSoluciones");
             //bandera=1;
-            if (bandera == 0) {
+            if (bandera == 0 || nSol ) {
                 continueButton.onclick = inicio; 
             } else {
                 continueButton.onclick = null; 
