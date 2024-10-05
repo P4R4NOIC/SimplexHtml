@@ -1,0 +1,73 @@
+/* Estilos generales para el cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Estilos para el contenedor del formulario */
+#formContainer {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 50%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* Estilos para los elementos del formulario */
+p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+label {
+    font-weight: bold;
+}
+
+/* Estilos para los campos de entrada (sin cambiar el tamaño) */
+input[type="text"], input[type="number"], select {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd; /* Color más claro */
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #86c55a; /* Color verde más oscuro al enfocar */
+}
+
+/* Estilos para los botones */
+button {
+    background-color: #99d16d; /* Verde suave */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #86c55a; /* Verde más oscuro */
+}
+
+/* Subíndices en las variables */
+.subindice {
+    font-size: 14px;
+    vertical-align: sub;
+    margin-left: 5px;
+}
+
+/* Ocultar los inputs que no son necesarios */
+input[style="display: none"] {
+    display: none;
+}

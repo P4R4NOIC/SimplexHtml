@@ -1,13 +1,52 @@
+/* main.css */
+
 body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Altura de la ventana gráfica */
-    margin: 0; /* Elimina el margen predeterminado del body */
+    height: 100vh;
 }
 
 .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+select, input[type="text"], button {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+    box-sizing: border-box;
+}
+
+select:focus, input[type="text"]:focus {
+    border-color: #777777;
+    outline: none;
+}
+
+button {
+    background-color: #99d16d; /* Verde suave */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #86c55a; /* Verde más oscuro */
 }

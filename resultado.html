@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="resultado.css">
 </head>
 <body>
     <div id="formContainer" class="form-container"></div>
@@ -30,6 +30,7 @@
                 // Crear la fila de encabezado con las variables
                 let headerRow = document.createElement('tr');
                 let emptyCell = document.createElement('th');
+                emptyCell.textContent = 'BVS';
                 headerRow.appendChild(emptyCell);  // Célula vacía en la esquina superior izquierda
                 variables.forEach(function(variable) {
                     let th = document.createElement('th');
@@ -67,18 +68,26 @@
                 console.error("No se encontraron los datos en localStorage");
             }
             
-            // Crear el botón "Continuar"
-            var button = document.createElement('button');
-            button.type = 'button';
-            button.onclick = inicio; 
-            button.textContent = 'Continuar';
-            formContainer.appendChild(button);
+            // Crear un contenedor para los botones
+            var buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container'; // Agregar clase para estilos
 
-            var button = document.createElement('button');
-            button.type = 'button';
-            button.onclick = function() {window.location.href = "main.html";};
-            button.textContent = 'Volver al inicio';
-            formContainer.appendChild(button);
+            // Crear el botón "Continuar"
+            var continueButton = document.createElement('button');
+            continueButton.type = 'button';
+            continueButton.onclick = inicio; 
+            continueButton.textContent = 'Continuar';
+            buttonContainer.appendChild(continueButton);
+
+            // Crear el botón "Volver al inicio"
+            var backButton = document.createElement('button');
+            backButton.type = 'button';
+            backButton.onclick = function() { window.location.href = "main.html"; };
+            backButton.textContent = 'Volver al inicio';
+            buttonContainer.appendChild(backButton);
+
+            // Añadir el contenedor de botones al formContainer
+            formContainer.appendChild(buttonContainer);
         };
     </script>
     

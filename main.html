@@ -8,30 +8,28 @@
 </head>
 <body>
     <div class="form-container">
-        <form action="">
-            <div>
-                <label for="metSol">Método de solución</label>
-                <select name="metSol" id="metSol">
-                    <option value="0">Simplex Dos Fases</option>
-                    <option value="1">Gran M</option>
-                </select>
-            </div>
-            <div>
-                <label for="var">Cantidad de variables</label>
-                <input type="text" id="var" name="var">
-            </div>
-            <div>
-                <label for="res">Cantidad de restricciones</label>
-                <input type="text" id="res" name="res">
-            </div>
-            <div>
-                <label for="sol">Cantidad de soluciones</label>
-                <input type="text" id="sol" name="sol">
-            </div>
-            <div>
-                <button type="button" onclick="ingresarValores()">Continuar</button>
-            </div>
-        </form>
+        <div>
+            <label for="metSol">Método de solución</label>
+            <select name="metSol" id="metSol">
+                <option value="0">Simplex Dos Fases</option>
+                <option value="1">Gran M</option>
+            </select>
+        </div>
+        <div>
+            <label for="var">Cantidad de variables</label>
+            <input type="text" id="var" name="var">
+        </div>
+        <div>
+            <label for="res">Cantidad de restricciones</label>
+            <input type="text" id="res" name="res">
+        </div>
+        <div>
+            <label for="sol">Cantidad de soluciones</label>
+            <input type="text" id="sol" name="sol">
+        </div>
+        <div>
+            <button type="button" onclick="ingresarValores()">Continuar</button>
+        </div>
     </div>
 
     <script>

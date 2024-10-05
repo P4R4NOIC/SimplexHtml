@@ -1,0 +1,85 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 20px;
+}
+
+#formContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #ffffff; /* Mantiene el fondo blanco de la tabla */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #e1e1e1;
+}
+
+/* Encabezado de la tabla */
+th {
+    background-color: #f28f8f; /* Rojo suave */
+    color: #ffffff; /* Texto blanco */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Celdas de datos */
+td {
+    background-color: #fbd8d8; /* Rosa pálido */
+    transition: background-color 0.3s;
+}
+
+td:hover {
+    background-color: #f9c6c6; /* Color de fondo al pasar el ratón */
+}
+
+/* Estilos para el contenedor de los botones */
+.button-container {
+    display: flex; /* Usar flexbox para una mejor alineación */
+    justify-content: center; /* Centrar los botones horizontalmente */
+    gap: 20px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio encima de los botones */
+}
+
+/* Estilos para el botón */
+button {
+    padding: 12px 24px;
+    background-color: #99d16d; /* Verde suave */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #86c55a; /* Verde más oscuro */
+    transform: translateY(-2px);
+}
+
+button:last-of-type {
+    background-color: #f57c7c; /* Rojo suave */
+}
+
+button:last-of-type:hover {
+    background-color: #ef5350; /* Rojo más intenso */
+}

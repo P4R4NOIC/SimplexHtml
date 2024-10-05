@@ -1,4 +1,4 @@
-function crearMatriz(columnas,filas){
+function crearMatriz(columnas,filas, matrizOriginal){
     let matriz = [];
     for (let i = 1; i <= filas; i++) {
         let hilera = [];
@@ -7,19 +7,24 @@ function crearMatriz(columnas,filas){
         }
         matriz.push(hilera);
     }
+
+    for (let i = 0; i < matrizOriginal.length; i++) {
+        for (let j = 0; j < matrizOriginal[i].length - 1; j++) {
+            matriz[i][j] = matrizOriginal[i][j]; 
+        }
+        matriz[i][matriz[i].length - 1] = matrizOriginal[i][matrizOriginal[i].length - 1];  
+    }
     return matriz;
 }
 
-function rellenarMatriz(realVarSize, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion){
+function rellenarMatriz(arregloComparadores, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion){
     // Obtener los valores de las restricciones
     let iteradorHolgura = -1;
     let iteradorArtificial = -1;
     for (let j = 1; j <= cantidadRestricciones; j++) {
-        for (let k = 1; k <= +cantidadVariables; k++) {
-            let valor = +document.getElementsByName('r' + j + '_' + k)[0].value;
-            restricciones[j-1][k-1] = valor;
-        }
-        let comparador = +document.getElementsByName('d' + j)[0].value;
+        
+        //let comparador = +document.getElementsByName('d' + j)[0].value;
+        let comparador = arregloComparadores[j-1];
         if(comparador == -1){
             iteradorHolgura++;
             restricciones[j-1][+cantidadVariables + +iteradorHolgura] = 1;
@@ -48,9 +53,6 @@ function rellenarMatriz(realVarSize, sizeHolgura, restricciones, cantidadRestric
             arregloVariablesBasicas.push(arregloVariables[+cantidadVariables + +sizeHolgura + +iteradorArtificial]);
         }
         
-        // Agregar el valor de la constante
-        let constante = +document.getElementsByName('y' + j)[0].value;
-        restricciones[j-1][realVarSize-1] = constante;
     }
     return restricciones;
 }
@@ -73,15 +75,11 @@ function crearArregloVariables(vars, holg, art){
     return arreglo;
 }
 
-function sumaNumeroAConstantes(variable, numero, cantidadRestricciones){
-    for (let j = 1; j <= cantidadRestricciones; j++) {
-        let valor = +document.getElementsByName('r' + j + '_' + variable)[0].value;
-        valor = valor * numero * -1;
-        let constante = +document.getElementsByName('y' + j)[0].value;
-        constante = constante + valor;
-        document.getElementsByName('y' + j)[0].value = constante;
+function sumaNumeroAConstantes(variable, numero, cantidadRestricciones, restricciones){
+    for (let j = 0; j < cantidadRestricciones; j++) {
+        let valor = restricciones[j][variable] * numero * -1;
+        restricciones[j][restricciones[j].length - 1] += valor;
     }
-    
 }
 
 function cambiarVariablesP(arregloVariables, arregloP){
@@ -113,52 +111,77 @@ function guardarValores(){
     let sizeHolgura = 0;
     let sizeArtif = 0; 
 
-    let cantidadVariables = localStorage.getItem('cantidadVariables');
-    let cantidadRestricciones = localStorage.getItem('cantidadRestricciones');
-    let metodoSolucion = localStorage.getItem('metodoSolucion');
+    let cantidadVariables = +localStorage.getItem('cantidadVariables');
+    let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
+    let metodoSolucion = +localStorage.getItem('metodoSolucion');
     
+
+    let arregloLimites = [];
+    let arregloValorLimites = [];
+    let arregloValorFuncionObjetivo = [];
+    
+    // Carga de arreglo de limites, valores de limites y la función objetivo
+    for (let i = 1; i <= +cantidadVariables; i++) {
+        let limite = +document.getElementsByName('n'+i)[0].value;
+        let numero = +document.getElementsByName('z'+i)[0].value;
+        let valorFuncionObjetivo = +document.getElementsByName('x'+i)[0].value;
+        arregloLimites.push(limite);
+        arregloValorLimites.push(numero);
+        arregloValorFuncionObjetivo.push(valorFuncionObjetivo);
+    }
+
+    let arregloComparadores = [];
+    // Carga de Matriz de valores y arreglo de comparadores
+    for (let i = 1; i <= cantidadRestricciones; i++) {
+        let hilera = [];
+        for (let j = 1; j <= cantidadVariables; j++) {
+            let valor = +document.getElementsByName('r' + i + '_' + j)[0].value;
+            hilera.push(valor);
+        }
+        let valor = +document.getElementsByName('y' + i)[0].value;
+        hilera.push(valor);
+        restricciones.push(hilera);
+        valor = +document.getElementsByName('d' + i)[0].value;
+        arregloComparadores.push(valor);
+    }
 
     let arregloP = [];
     let sumaAZeta = 0;
-
-
     // Chequeo de limites negativos
-    for (let i = 1; i <= +cantidadVariables; i++) {
-        // neg = 1: Tiene limite negativo
-        // neg = 0: Sin limite
-        let neg = +document.getElementsByName('n'+i)[0].value;
+    for (let i = 0; i < +cantidadVariables; i++) {
+        // arregloLimites = 1: Tiene limite negativo
+        // arregloLimites = 0: Sin limite
         let value = "";
-        if(neg == 1){
-            let numero = +document.getElementsByName('z'+i)[0].value;
-            if (numero!=0){
-                value = "x"+i+"p";
-                let xTemporal = +document.getElementsByName('x'+i)[0].value;
-                sumaAZeta = sumaAZeta + xTemporal * numero;
-                sumaNumeroAConstantes(i, numero, cantidadRestricciones);
+        if(arregloLimites[i] == 1){
+            if (arregloValorLimites[i]!=0){
+                value = "x"+(i+1)+"p";
+                let xTemporal = arregloValorFuncionObjetivo[i];
+                sumaAZeta = sumaAZeta + xTemporal * arregloValorLimites[i];
+                sumaNumeroAConstantes(i, arregloValorLimites[i], cantidadRestricciones, restricciones);
             }
         }
         arregloP.push(value);
     }
 
     // Cambiar RHS negativos
-    for (let j = 1; j <= cantidadRestricciones; j++) {
-        let constante = +document.getElementsByName('y' + j)[0].value;
-        if(constante<0){
-            document.getElementsByName('y' + j)[0].value = -constante;
-            let comparador = +document.getElementsByName('d' + j)[0].value;
-            document.getElementsByName('d' + j)[0].value = -comparador; 
+    for (let i = 0; i < cantidadRestricciones; i++) {
 
-            for (let k = 1; k <= +cantidadVariables; k++) {
-                let valor = +document.getElementsByName('r' + j + '_' + k)[0].value;
-                valor = -valor; 
-                document.getElementsByName('r' + j + '_' + k)[0].value = valor; 
+        let ultimaPosicion = restricciones[i][restricciones[i].length - 1];
+        
+        if (ultimaPosicion < 0) {
+            restricciones[i][restricciones[i].length - 1] = -ultimaPosicion;
+            arregloComparadores[i] = -arregloComparadores[i];
+    
+            for (let j = 0; j < cantidadVariables; j++) {
+                restricciones[i][j] = -restricciones[i][j];
             }
         }
     }
+    
 
     // Contador de variables reales
-    for (let i = 1; i <= cantidadRestricciones; i++) {
-        let comparador = document.getElementsByName('d' + i)[0].value;
+    for (let i = 0; i < cantidadRestricciones; i++) {
+        let comparador = arregloComparadores[i];
         if(comparador == -1){
             sizeHolgura++;  //Holgura positiva
         }
@@ -185,7 +208,7 @@ function guardarValores(){
         let valor = 0;
         arregloW.push(valor); // Aprovecha el ciclo para rellenar -w
         if(i<=cantidadVariables){
-            valor = +document.getElementsByName('x' + i)[0].value;
+            valor = arregloValorFuncionObjetivo[i-1];
             if(objetivoFuncion=='1'){
                 valor = valor * -1;
             }
@@ -204,9 +227,10 @@ function guardarValores(){
     let BIGNUMBER = Math.max(...restricciones.flat()) * 100;
     localStorage.setItem('BIGNUMBER', BIGNUMBER);
 
-    restricciones = crearMatriz(realVarSize, +cantidadRestricciones);
-    restricciones = rellenarMatriz(realVarSize, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion);
-
+    restricciones = crearMatriz(realVarSize, cantidadRestricciones, restricciones);
+    
+    restricciones = rellenarMatriz(arregloComparadores, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion);
+    
     restricciones.unshift(arrObj);
     if(metodoSolucion==0 && sizeArtif!= 0){
         restricciones.unshift(arregloW);
@@ -216,12 +240,11 @@ function guardarValores(){
     // Chequeo de variables sin limite
     let contador = 0;
     for (let i = 1; i <= +cantidadVariables; i++) {
-        // neg = 1: Tiene limite negativo
-        // neg = 0: Sin limite
-        let neg = +document.getElementsByName('n'+i)[0].value;
+        // arregloLimites = 1: Tiene limite negativo
+        // arregloLimites = 0: Sin limite
         let xp = "";
         let xpp = "";
-        if(neg == 0){
+        if(arregloLimites[i-1] == 0){
             xp = "x"+i+"p";
             xpp = "x"+i+"pp";
             arregloVariables.splice(i-1+contador, 1, xp, xpp);
@@ -292,32 +315,20 @@ function validarEntrada(){
     guardarValores();
 }
 
-function obtenerDistintos(cantidadRestricciones){
-    let distintos = -1;
-    let menores = 0;
-    let mayores = 0;
-    for (let i = 1; i <= cantidadRestricciones; i++) {
-        let comparador = document.getElementsByName('d' + i)[0].value;
-        if(comparador == -1){
-            menores++;  
-        }
-        if(comparador == 1){
-            mayores++;  
-        }
-    }
-    if(menores<mayores){
-        distintos = 1;
-    }
-    return distintos;
-}
-
-function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos){
+function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos, limites){
 
     //Relleno normal
     for (let i = 1; i <= cantidadRestricciones; i++) {
         let array = [];
         let comparador = document.getElementsByName('d' + i)[0].value;
     
+        if(comparador==0){
+            limites.push("Sin limite");
+            comparador = -1;
+        }else{
+            limites.push(0);
+        }
+
         for (let j = 1; j <= cantidadVariables; j++) {
             let valor = +document.getElementsByName('r' + i + '_' + j)[0].value;
             if(comparador != distintos && comparador != 0){valor = valor*-1}
@@ -328,6 +339,8 @@ function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, fun
         valor = +document.getElementsByName('y'+i)[0].value;
         if(comparador != distintos && comparador != 0){valor = valor*-1}
         funObj.push(valor);
+        
+        
     }
 
     //Transpuesta
@@ -362,9 +375,14 @@ function calcularDual(){
     let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
     let matriz = [];
     let funObj = [];
-    let distintos = obtenerDistintos(cantidadRestricciones);
-    matriz = matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos);
+    let limites = [];
     let objetivoFuncion = +document.getElementsByName('funObj')[0].value;
+    let distintos = 1;
+    if(objetivoFuncion==1){
+        distintos = -1;
+    }
+    matriz = matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos, limites);
+    
     console.log(matriz);
     
     let var1 = "max z = ";
@@ -388,11 +406,18 @@ function calcularDual(){
                 var2 += " + ";  
             }
         }
-        var2 += ""+bocas + matriz[i][matriz[i].length - 1];
+        let bocasIgual = +document.getElementsByName('n'+(i+1))[0].value;
+        
+        if(bocasIgual==0){
+            var2 += ""+" = " + matriz[i][matriz[i].length - 1];
+        }else{
+            var2 += ""+bocas + matriz[i][matriz[i].length - 1];
+        }
         if (i < matriz.length - 1) {
             var2 += "\n";  
         }
     }
     console.log(var1);
     console.log(var2);
+    console.log(limites);
 }
