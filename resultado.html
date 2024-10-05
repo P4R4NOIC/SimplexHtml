@@ -10,6 +10,9 @@
     <div id="formContainer" class="form-container"></div>
         <!-- El contenido generado se insertará aquí -->
     </div>
+    <div id="formResumen" class="form-container"></div>
+        <!-- El contenido generado se insertará aquí -->
+    </div>
     <script src="simplex.js"></script>
     <script>
         window.onload = function() {
@@ -19,6 +22,10 @@
             let matriz = JSON.parse(localStorage.getItem('matriz'));
     
             var formContainer = document.getElementById('formContainer');
+
+            var label = document.createElement('label');
+            label.textContent = 'Matriz:';
+            formContainer.appendChild(label); 
 
             // Verificar si los datos se obtuvieron correctamente
             if (BVS && variables && matriz) {
@@ -76,7 +83,7 @@
             var continueButton = document.createElement('button');
             continueButton.type = 'button';
             let bandera = localStorage.getItem("bandera");
-            
+            //bandera=1;
             if (bandera == 0) {
                 continueButton.onclick = inicio; 
             } else {
@@ -96,28 +103,33 @@
             // Añadir el contenedor de botones al formContainer
             formContainer.appendChild(buttonContainer);
 
-            
+            // Crear un contenedor para el resumen de iteración
+            var formResumen = document.getElementById('formResumen');
+
             //DETECTE BANDERA IF EN 1
-            if(bandera==1){
+            if (bandera == 1) {
                 let resumenIteracion = JSON.parse(localStorage.getItem("resumenIteracion"));
-                
-                // Crear la tabla
-                let table = document.createElement('table');
-                table.setAttribute('border', '1');
-                let tbody = document.createElement('tbody');
+                var label = document.createElement('label');
+                label.textContent = 'Resumen Iteraciones:';
+                formResumen.appendChild(label); 
+
+                // Crear la tabla para el resumen de iteración
+                let resumenTable = document.createElement('table');
+                resumenTable.setAttribute('border', '1');
+                let resumenTbody = document.createElement('tbody');
 
                 // Crear la fila de encabezado con las variables
-                let headerRow = document.createElement('tr');
+                let resumenHeaderRow = document.createElement('tr');
                 variables.forEach(function(variable) {
                     let th = document.createElement('th');
                     th.textContent = variable;
-                    headerRow.appendChild(th);
+                    resumenHeaderRow.appendChild(th);
                 });
                 let th = document.createElement('th');
                 th.textContent = 'Z';
-                headerRow.appendChild(th);
+                resumenHeaderRow.appendChild(th);
                 // Añadir el encabezado al tbody
-                tbody.appendChild(headerRow);
+                resumenTbody.appendChild(resumenHeaderRow);
 
                 // Crear las filas de la matriz con los valores de resumenIteracion
                 resumenIteracion.forEach(function(fila) {
@@ -130,12 +142,12 @@
                         row.appendChild(td);
                     });
 
-                    tbody.appendChild(row);
+                    resumenTbody.appendChild(row);
                 });
 
-                // Añadir el tbody a la tabla y la tabla al documento
-                table.appendChild(tbody);
-                formContainer.appendChild(table);
+                // Añadir el tbody a la tabla y la tabla al contenedor de resumen
+                resumenTable.appendChild(resumenTbody);
+                formResumen.appendChild(resumenTable);
             }
         };
     </script>

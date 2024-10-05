@@ -77,7 +77,7 @@ function inicio(){
   console.log(BVS);
   console.log(matriz);
   console.log("resumenIteracion: ", resumenIteracion);
-  //location.reload();
+  location.reload();
 }
 
 function opRow(row1, row2, n){
