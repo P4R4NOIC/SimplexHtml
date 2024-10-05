@@ -1,5 +1,10 @@
 /* Estilos generales para el cuerpo */
 body {
+    background-image: url("watermelon.avif");
+    background-size: 300px 300px; /* Cambia el tamaño de la imagen */
+    background-repeat: repeat; /* Hace que la imagen se repita */
+    background-position: top left; /* Posiciona la imagen en la esquina superior izquierda */
+    
     font-family: Arial, sans-serif;
     background-color: #f0f8ff;
     margin: 0;

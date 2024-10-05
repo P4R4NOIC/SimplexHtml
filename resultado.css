@@ -1,5 +1,10 @@
 /* Estilos generales */
 body {
+    background-image: url("watermelon2.avif");
+    background-size: 300px 300px; /* Cambia el tamaño de la imagen */
+    background-repeat: repeat; /* Hace que la imagen se repita */
+    background-position: top left; /* Posiciona la imagen en la esquina superior izquierda */
+    
     font-family: 'Arial', sans-serif;
     background-color: #f0f8ff;
     margin: 0;
@@ -57,6 +62,7 @@ td:hover {
     justify-content: center; /* Centrar los botones horizontalmente */
     gap: 20px; /* Espacio entre los botones */
     margin-top: 20px; /* Espacio encima de los botones */
+    flex-wrap: wrap; /* Permite que los botones se ajusten en pantallas pequeñas */
 }
 
 /* Estilos para el botón */
@@ -68,12 +74,23 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Mejora las transiciones */
+}
+
+button:disabled {
+    background-color: #cccccc; /* Cambia el color de fondo a gris */
+    color: #666666; /* Cambia el color del texto a gris oscuro */
+    cursor: not-allowed; /* Cambia el cursor a "no permitido" */
+    opacity: 0.7; /* Hace el botón ligeramente transparente */
 }
 
 button:hover {
     background-color: #86c55a; /* Verde más oscuro */
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* Efecto de "levantamiento" al hacer hover */
+}
+
+button:active {
+    transform: translateY(0); /* Vuelve al estado original cuando el botón es presionado */
 }
 
 button:last-of-type {
@@ -83,3 +100,4 @@ button:last-of-type {
 button:last-of-type:hover {
     background-color: #ef5350; /* Rojo más intenso */
 }
+

@@ -39,15 +39,16 @@
             var variables = document.getElementById('var').value;
             var restricciones = document.getElementById('res').value;
             var soluciones = document.getElementById('sol').value;
-            
-            if (isNaN(variables) || isNaN(restricciones) || variables.trim() === "" || restricciones.trim() === "") {
-                console.log('Por favor, ingresa valores numéricos para las variables y restricciones.');
-                return; // Detiene la ejecución si los valores no son válidos
+
+            if (isNaN(variables) || isNaN(restricciones) || isNaN(soluciones) || 
+                variables.trim() === "" || restricciones.trim() === "" || soluciones.trim() === "") {
+                console.log('Por favor, ingresa valores numéricos para las variables, restricciones y soluciones.');
+                return; 
             }
 
-            if (Number(variables) <= 0 || Number(restricciones) <= 0) {
-                console.log('Por favor, ingresa valores numéricos positivos para las variables y restricciones.');
-                return; // Detiene la ejecución si los valores son negativos
+            if (Number(variables) <= 0 || Number(restricciones) <= 0 || Number(soluciones) <= 0) {
+                console.log('Por favor, ingresa valores numéricos positivos para las variables, restricciones y soluciones.');
+                return; 
             }
 
             // Guarda los valores en el localStorage
