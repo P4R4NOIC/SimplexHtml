@@ -6,6 +6,7 @@ console.log(BVS);
 let variables = JSON.parse(localStorage.getItem('arregloVariables'));
 let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
 console.log(variables);
+let nSol = +localStorage.getItem('cantidadSoluciones');
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
 //         [0, 1, 0, 1, 0, 3],
@@ -17,7 +18,7 @@ console.log("FILAZ: ", filaZ);
 let row;
 let col;
 //let M = 1000;
-let solve = 0;
+let solve = +localStorage.getItem('bandera');
 let M = +localStorage.getItem('BIGNUMBER');
 // let FoG = 0;
 let FoG = +localStorage.getItem('metodoSolucionFinal');
@@ -289,13 +290,17 @@ function darRespuesta(r){
 
 function simplexIteracionBase(){
   if (solve){
-    if (nSol != 0){
+    if (nSol > 0){
       col = escogeEntraMulSol();
       if (col == -1){
         darRespuesta(1); //no se pueden dar mas soluciones
+        return;
       }
+      nSol--;
+      localStorage.setItem('cantidadSoluciones', nSol);
     }else{
       darRespuesta(2); // ya se dieron todas las iteraciones solicitadas
+      return;
     }
   }else{
     col = escogeEntra();
@@ -307,6 +312,7 @@ function simplexIteracionBase(){
   }
   if (col == -1){
     solve = 1;
+    localStorage.setItem('bandera', solve);
     darRespuesta(6);
     console.log("solucion encontrada\n");
     return; //existe una solucion
