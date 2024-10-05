@@ -23,6 +23,10 @@ let M = +localStorage.getItem('BIGNUMBER');
 let FoG = +localStorage.getItem('metodoSolucionFinal');
 console.log("FOG: ", FoG);
 let resumenIteracion = JSON.parse(localStorage.getItem('resumenIteracion'));
+if (resumenIteracion.length == 0){
+  addIteracionResume();
+}
+console.log("resumenIteracion: ", resumenIteracion);
 
 
 function checkNextFase(){
@@ -129,7 +133,7 @@ function escogeEntra(){
   if(min<0){ 
     return columna;
   }
-  if (matriz[0][matriz[0].length-1]<0){
+  if (matriz[0][matriz[0].length-1]<0&& BVS[filaZ]=="z"){
     return -2;
   }  
   return -1;
@@ -150,7 +154,7 @@ function escogeSale(){
   for (let i = filaZ+1; i < matriz.length; i++) {
     if(matriz[i][col]!=0){
       let radio = matriz[i][matriz[0].length-1]/matriz[i][col];
-      if (radio >= 0 && radio < min) {
+      if ((radio >= 0 && !(matriz[i][matriz[0].length-1] == 0 && matriz[i][col]<0)) && radio < min ) {
         min = radio;
         varS = {};
         varS[BVS[i]] = i;
@@ -205,6 +209,17 @@ function addIteracionResume(){
     }
   }
   iteracion.push(matriz[filaZ][matriz[0].length-1]);
+  for(let i = 0; i < varOriginal.length; i++){
+    let count= 0;
+    for (let j = 0; j < BVS.length; j++) {
+      if (matriz[j][i] != 0){
+        count++;
+      }
+    }
+    if (count != 1){
+      iteracion[i] = 0;
+    }
+  }
   resumenIteracion.push(iteracion);
   localStorage.setItem('resumenIteracion', JSON.stringify(resumenIteracion));
   
