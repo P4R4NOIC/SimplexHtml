@@ -95,7 +95,7 @@ function inicio(){
   console.log(BVS);
   console.log(matriz);
   console.log("resumenIteracion: ", resumenIteracion);
-  location.reload();
+  //location.reload();
 }
 
 function opRow(row1, row2, n){
@@ -243,42 +243,28 @@ function addIteracionResume(){
   
 }
 
-
-
-/*
-function simplexDosFases(){
-  simplexPreFaseGranM(); // una vez antes de cualquier metodo
-
-  simplexIteracionBase(); // se hacen iteraciones normales
-  if (matriz[0][matriz[0].length] && DosFases){
-    siguienteFase(); // se da en caso de que ya la w sea 0 
-                      //este metodo debe armar de nuevo la matriz pero 
-                      //sin las columnas de a ni la fila de w
-                      //se setea filaZ
-  }
-
-
-}
-*/
-
 function desplegarSoluciones(){
-  console.log(resumenIteracion[resumenIteracion.length-1]);
+  let solutions = [];
+  solutions.push(resumenIteracion[resumenIteracion.length-1][varOriginal.length]+"");
+  //console.log("z:", resumenIteracion[resumenIteracion.length-1][varOriginal.length]);
   for(let i = 0; i < varOriginal.length; i++){
     let keepGoing = 0;
     for (let j = filaZ+1; j < BVS.length; j++) {
       if (varOriginal[i]== BVS[j]){
-        console.log("basica");
-        console.log(resumenIteracion[i]);
+        solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"*");
+        //console.log(resumenIteracion[resumenIteracion.length-1][i]+"*");
         keepGoing = 1;
         break;
       }
     }
     if (keepGoing){
       keepGoing = 0;
-      break;
+      continue;
     }
-    //console.log(resumenIteracion[i]);
+    solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"");
+    //console.log(varOriginal[i], ": ",resumenIteracion[resumenIteracion.length-1][i]);
   }
+  console.log("solutions: ", solutions);
 }
 
 function darRespuesta(r){
