@@ -1,6 +1,8 @@
 //----------------------------------------------------------------------
 // let BVS = ["z", "s3", "s4", "s5"];
 let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
+let sumaAZeta = +localStorage.getItem('sumaAZeta');
+console.log(sumaAZeta);
 console.log(BVS);
 // let variables = ["x1","x2", "s3", "s4", "s5"];
 let variables = JSON.parse(localStorage.getItem('arregloVariables'));
@@ -245,8 +247,13 @@ function addIteracionResume(){
 
 function desplegarSoluciones(){
   let solutions = [];
-  solutions.push(resumenIteracion[resumenIteracion.length-1][varOriginal.length]+"");
-  //console.log("z:", resumenIteracion[resumenIteracion.length-1][varOriginal.length]);
+  let minOmax = +localStorage.getItem('objetivoFuncion');
+  if (minOmax){
+   solutions.push(resumenIteracion[resumenIteracion.length-1][varOriginal.length]+sumaAZeta+"");
+  }else{
+    solutions.push((-1*resumenIteracion[resumenIteracion.length-1][varOriginal.length])+sumaAZeta+"");
+  }
+   //console.log("z:", resumenIteracion[resumenIteracion.length-1][varOriginal.length]);
   for(let i = 0; i < varOriginal.length; i++){
     let keepGoing = 0;
     for (let j = filaZ+1; j < BVS.length; j++) {
