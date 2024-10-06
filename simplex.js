@@ -9,6 +9,7 @@ let variables = JSON.parse(localStorage.getItem('arregloVariables'));
 let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
 console.log(variables);
 let nSol = +localStorage.getItem('cantidadSoluciones');
+localStorage.setItem("banderaError", 0);
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
 //         [0, 1, 0, 1, 0, 3],
@@ -66,8 +67,17 @@ function checkNextFase(){
   return 1;
 }
 
-
 function inicio(){
+  /*if (Dual){*/
+    simplex();
+  /*}else{
+    while (!solve){
+      simplex();
+    }
+  }*/
+}
+
+function simplex(){
   if (FoG){ // dos fases o gran M
     if (FoG == 3){ // si ya pre proceso
       let cnf = checkNextFase();
@@ -246,6 +256,8 @@ function addIteracionResume(){
 }
 
 function desplegarSoluciones(){
+  let arrLimitFlag =  JSON.parse(localStorage.getItem('arregloLimites'));
+  let arrLimit = JSON.parse(localStorage.getItem('arregloValorLimites'));
   let solutions = [];
   let minOmax = +localStorage.getItem('objetivoFuncion');
   if (minOmax){
@@ -258,7 +270,16 @@ function desplegarSoluciones(){
     let keepGoing = 0;
     for (let j = filaZ+1; j < BVS.length; j++) {
       if (varOriginal[i]== BVS[j]){
-        solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"*");
+        if (i < arrLimitFlag.length){
+          if (arrLimitFlag[i]){
+            solutions.push(resumenIteracion[resumenIteracion.length-1][i]+arrLimit[i]+"*");
+          }else{
+            solutions.push(resumenIteracion[resumenIteracion.length-1][i]-resumenIteracion[resumenIteracion.length-1][i+1]+"*");
+            i++;
+          }
+        }else{
+          solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"*");
+        }
         //console.log(resumenIteracion[resumenIteracion.length-1][i]+"*");
         keepGoing = 1;
         break;
@@ -268,9 +289,19 @@ function desplegarSoluciones(){
       keepGoing = 0;
       continue;
     }
-    solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"");
+    if (i < arrLimitFlag.length){
+      if (arrLimitFlag[i]){
+        solutions.push(resumenIteracion[resumenIteracion.length-1][i]+arrLimit[i]+"");
+      }else{
+        solutions.push(resumenIteracion[resumenIteracion.length-1][i]-resumenIteracion[resumenIteracion.length-1][i+1]+"");
+        i++;
+      }
+    }else{
+      solutions.push(resumenIteracion[resumenIteracion.length-1][i]+"");
+    }
     //console.log(varOriginal[i], ": ",resumenIteracion[resumenIteracion.length-1][i]);
   }
+  localStorage.setItem('solutions', JSON.stringify(solutions));
   console.log("solutions: ", solutions);
 }
 
@@ -282,16 +313,25 @@ function darRespuesta(r){
     console.log("ya se dieron todas las iteraciones solicitadas\n");
   }
   if (r == 3){
-    console.log("no hay variables negativas para escoger\n");
+    //console.log("no hay variables negativas para escoger");
+    localStorage.setItem("mensajeError", "No hay variables negativas para escoger");
+    localStorage.setItem("banderaError", 1);
   }
   if (r == 4){
-    console.log("problema no acotado\n");
+    //console.log("Problema no acotado\n");
+    localStorage.setItem("mensajeError", "Problema no acotado");
+    localStorage.setItem("banderaError", 1);
   }
   if (r == 5){
-    console.log("Problema infactible RHS negativo al final de la primera Fase\n");
+    //console.log("Problema infactible RHS negativo al final de la primera Fase");
+    localStorage.setItem("mensajeError", "Problema infactible RHS negativo al final de la primera Fase");
+    localStorage.setItem("banderaError", 1);
   }
   if (r == 6){
-    console.log("La Solucion es \n");
+    //console.log("La Solucion es \n");
+    
+    localStorage.setItem("mensajeError", "Solucion encontrada");
+    localStorage.setItem("banderaError", 1);
     desplegarSoluciones();
     console.log(resumenIteracion);
   }
@@ -332,7 +372,6 @@ function simplexIteracionBase(){
   row = escogeSale();
   if (row == -1){
     darRespuesta(4); //no es acotado 
-    console.log("no es acotado");
     return;
   }
   BVS[row] = variables[col];
@@ -343,7 +382,6 @@ function simplexIteracionBase(){
     }
   }  
   addIteracionResume();
-  console.log("matriz despues", matriz);
   
 
 }
