@@ -9,7 +9,6 @@ let variables = JSON.parse(localStorage.getItem('arregloVariables'));
 let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
 console.log(variables);
 let nSol = +localStorage.getItem('cantidadSoluciones');
-localStorage.setItem("banderaError", 0);
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
 //         [0, 1, 0, 1, 0, 3],
@@ -68,6 +67,7 @@ function checkNextFase(){
 }
 
 function inicio(){
+  localStorage.setItem("banderaError", 0);
   /*if (Dual){*/
     simplex();
   /*}else{
@@ -315,24 +315,24 @@ function darRespuesta(r){
   if (r == 3){
     //console.log("no hay variables negativas para escoger");
     localStorage.setItem("mensajeError", "No hay variables negativas para escoger");
-    localStorage.setItem("banderaError", 1);
+    localStorage.setItem("banderaError", 2);
   }
   if (r == 4){
     //console.log("Problema no acotado\n");
     localStorage.setItem("mensajeError", "Problema no acotado");
-    localStorage.setItem("banderaError", 1);
+    localStorage.setItem("banderaError", 2);
   }
   if (r == 5){
     //console.log("Problema infactible RHS negativo al final de la primera Fase");
     localStorage.setItem("mensajeError", "Problema infactible RHS negativo al final de la primera Fase");
-    localStorage.setItem("banderaError", 1);
+    localStorage.setItem("banderaError", 2);
   }
   if (r == 6){
     //console.log("La Solucion es \n");
-    
+    desplegarSoluciones();
     localStorage.setItem("mensajeError", "Solucion encontrada");
     localStorage.setItem("banderaError", 1);
-    desplegarSoluciones();
+    
     console.log(resumenIteracion);
   }
 }
