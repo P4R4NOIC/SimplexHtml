@@ -128,7 +128,7 @@
                 resumenTable.setAttribute('border', '1');
                 let resumenTbody = document.createElement('tbody');
 
-                variables = JSON.parse(localStorage.getItem("varOriginal"));
+                variables = JSON.parse(localStorage.getItem("arregloVariablesSolucion"));
                 // Crear la fila de encabezado con las variables
                 let resumenHeaderRow = document.createElement('tr');
                 let th = document.createElement('th');
@@ -162,7 +162,7 @@
             if(banderaError==2){
                 //ERROR DETECTADO
                 var label = document.createElement('label');
-                label.textContent = localStorage.getItem('mensajeError');
+                label.textContent = "Error: " + localStorage.getItem('mensajeError');
                 formRespuesta.appendChild(label); 
             }
 

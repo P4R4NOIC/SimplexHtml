@@ -251,6 +251,7 @@ function guardarValores(primalODual){
     // Crear arreglo de variables
     arregloVariables = crearArregloVariables(+cantidadVariables,sizeHolgura, sizeArtif);
     
+    localStorage.setItem('arregloVariablesSolucion', JSON.stringify(arregloVariables));
     // Si se crearon variables xIp, se cambia el arreglo de variables
     if(sumaAZeta!=0){
         cambiarVariablesP(arregloVariables, arregloP);
