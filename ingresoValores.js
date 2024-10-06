@@ -90,35 +90,17 @@ function cambiarVariablesP(arregloVariables, arregloP){
     }
 }
 
-function guardarValores(){
-    // Arreglo para almacenar los coeficientes de la función objetivo
-    let arrObj = [];
-    // Arreglo para almacenar las restricciones
-    let restricciones = [];
-    let arregloVariables = [];
-    let arregloVariablesBasicas = [];
-    let resumenIteracion = [];
-
-    // Creador de -w
-    // Checar si es metodo de GranM o dos fases
-    // 0 = Dos fases
-    // 1 = Gran M
-    let arregloW = [];
-
+function obtenerValoresPrimal(){
+    // -------------------------- OBTENCION VARIABLES PRIMAL
+    let cantidadVariables = +localStorage.getItem('cantidadVariables');
+    let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
+    
     // MAX OR MIN
     let objetivoFuncion = +document.getElementsByName('funObj')[0].value;
 
-    let sizeHolgura = 0;
-    let sizeArtif = 0; 
-
-    let cantidadVariables = +localStorage.getItem('cantidadVariables');
-    let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
-    let metodoSolucion = +localStorage.getItem('metodoSolucion');
-    
-
+    let arregloValorFuncionObjetivo = [];
     let arregloLimites = [];
     let arregloValorLimites = [];
-    let arregloValorFuncionObjetivo = [];
     
     // Carga de arreglo de limites, valores de limites y la función objetivo
     for (let i = 1; i <= +cantidadVariables; i++) {
@@ -130,6 +112,8 @@ function guardarValores(){
         arregloValorFuncionObjetivo.push(valorFuncionObjetivo);
     }
 
+    // Arreglo para almacenar las restricciones
+    let restricciones = [];
     let arregloComparadores = [];
     // Carga de Matriz de valores y arreglo de comparadores
     for (let i = 1; i <= cantidadRestricciones; i++) {
@@ -143,6 +127,74 @@ function guardarValores(){
         restricciones.push(hilera);
         valor = +document.getElementsByName('d' + i)[0].value;
         arregloComparadores.push(valor);
+    }
+    // -------------------------- FIN OBTENCION VARIABLES PRIMAL
+
+    localStorage.setItem('cantidadVariables', cantidadVariables);
+    localStorage.setItem('cantidadRestricciones', cantidadRestricciones);
+    localStorage.setItem('objetivoFuncion', objetivoFuncion);
+
+    localStorage.setItem('arregloValorFuncionObjetivo', JSON.stringify(arregloValorFuncionObjetivo));
+    localStorage.setItem('restricciones', JSON.stringify(restricciones));
+    localStorage.setItem('arregloComparadores', JSON.stringify(arregloComparadores));
+    localStorage.setItem('arregloLimites', JSON.stringify(arregloLimites));
+    localStorage.setItem('arregloValorLimites', JSON.stringify(arregloValorLimites));
+}
+
+function guardarValores(primalODual){
+    // Arreglo para almacenar los coeficientes de la función objetivo
+    let arrObj = [];
+    
+    let arregloVariables = [];
+    let arregloVariablesBasicas = [];
+    let resumenIteracion = [];
+
+    // Creador de -w
+    // Checar si es metodo de GranM o dos fases
+    // 0 = Dos fases
+    // 1 = Gran M
+    let arregloW = [];
+
+    let sizeHolgura = 0;
+    let sizeArtif = 0; 
+    let metodoSolucion = +localStorage.getItem('metodoSolucion');
+
+    // Obtener las variables numéricas
+    let cantidadVariables;
+    let cantidadRestricciones;
+    let objetivoFuncion;
+
+    // Obtener los arreglos 
+    let arregloValorFuncionObjetivo;
+    let restricciones;
+    let arregloComparadores;
+    let arregloLimites;
+    let arregloValorLimites;
+    
+    if(primalODual){
+        // Obtener las variables numéricas
+        cantidadVariables = localStorage.getItem('cantidadVariables');
+        cantidadRestricciones = localStorage.getItem('cantidadRestricciones');
+        objetivoFuncion = localStorage.getItem('objetivoFuncion');
+
+        // Obtener los arreglos 
+        arregloValorFuncionObjetivo = JSON.parse(localStorage.getItem('arregloValorFuncionObjetivo'));
+        restricciones = JSON.parse(localStorage.getItem('restricciones'));
+        arregloComparadores = JSON.parse(localStorage.getItem('arregloComparadores'));
+        arregloLimites = JSON.parse(localStorage.getItem('arregloLimites'));
+        arregloValorLimites = JSON.parse(localStorage.getItem('arregloValorLimites'));
+    }else{
+        // Obtener las variables numéricas
+        cantidadVariables = localStorage.getItem('DUAL_cantidadVariables');
+        cantidadRestricciones = localStorage.getItem('DUAL_cantidadRestricciones');
+        objetivoFuncion = localStorage.getItem('DUAL_objetivoFuncion');
+
+        // Obtener los arreglos 
+        arregloValorFuncionObjetivo = JSON.parse(localStorage.getItem('DUAL_arregloValorFuncionObjetivo'));
+        restricciones = JSON.parse(localStorage.getItem('DUAL_restricciones'));
+        arregloComparadores = JSON.parse(localStorage.getItem('DUAL_arregloComparadores'));
+        arregloLimites = JSON.parse(localStorage.getItem('DUAL_arregloLimites'));
+        arregloValorLimites = JSON.parse(localStorage.getItem('DUAL_arregloValorLimites'));
     }
 
     let arregloP = [];
@@ -225,8 +277,7 @@ function guardarValores(){
         arregloVariablesBasicas.push("-z");
     }
     let BIGNUMBER = Math.max(...restricciones.flat()) * 100;
-    localStorage.setItem('BIGNUMBER', BIGNUMBER);
-
+    
     restricciones = crearMatriz(realVarSize, cantidadRestricciones, restricciones);
     
     restricciones = rellenarMatriz(arregloComparadores, sizeHolgura, restricciones, cantidadRestricciones, cantidadVariables, arregloVariablesBasicas, arregloVariables, arrObj, arregloW, BIGNUMBER, metodoSolucion);
@@ -258,6 +309,8 @@ function guardarValores(){
         }
     }
 
+    localStorage.setItem('BIGNUMBER', BIGNUMBER);
+
     localStorage.setItem('metodoSolucionFinal', 0);
     if(metodoSolucion==0 && sizeArtif!= 0){
         localStorage.setItem('metodoSolucionFinal', 1);
@@ -288,7 +341,12 @@ function guardarValores(){
     localStorage.setItem('matriz', JSON.stringify(restricciones));
     localStorage.setItem('resumenIteracion', JSON.stringify(resumenIteracion));
     
-    window.location.href = "resultado.html";
+    localStorage.setItem('cantidadVariables', cantidadVariables);
+    localStorage.setItem('cantidadRestricciones', cantidadRestricciones);
+    
+    if(primalODual){
+        window.location.href = "resultado.html";
+    }
 };
 
 function validarEntrada(){
@@ -312,7 +370,9 @@ function validarEntrada(){
 
     // Si todo es correcto, continuar con el flujo
     alert("Todos los campos son válidos.");
-    guardarValores();
+    obtenerValoresPrimal();
+    calcularDual();
+    guardarValores(1);
 }
 
 function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos, limites){
@@ -353,24 +413,7 @@ function matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, fun
 }
 
 function calcularDual(){
-    // Obtener todos los inputs del formulario
-    let inputs = document.querySelectorAll('input[type="text"]');
-
-    // Recorrer todos los inputs para validar
-    for (let i = 0; i < inputs.length; i++) {
-        let valor = inputs[i].value.trim();
-
-        // Si el campo está vacío, reemplazarlo por 0
-        if (valor === '') {
-            inputs[i].value = '0';
-        } else if (isNaN(valor)) {
-            // Si no es un número, mostrar una alerta
-            alert("Por favor, asegúrate de que todos los campos contengan solo números.");
-            inputs[i].focus(); // Coloca el cursor en el input incorrecto
-            return false; // Detiene la validación
-        }
-    }
-
+    
     let cantidadVariables = +localStorage.getItem('cantidadVariables');
     let cantidadRestricciones = +localStorage.getItem('cantidadRestricciones');
     let matriz = [];
@@ -383,41 +426,39 @@ function calcularDual(){
     }
     matriz = matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos, limites);
     
-    console.log(matriz);
-    
-    let var1 = "max z = ";
-    if(objetivoFuncion){
-        var1 = "min z = ";
-    }
-    for (let i = 0; i < cantidadRestricciones; i++) {
-        var1 += funObj[i] + "y" + (i + 1);  
-        if (i < cantidadRestricciones - 1) {
-            var1 += " + ";  
-        }
-    }
-
     let var2 = "";
-    let bocas = " >= ";
-    if(distintos==1){bocas = " <= "}
+    let arregloComparadores = [];
+    let bocas = 1;
+    if(distintos==1){bocas = -1}
     for (let i = 0; i < matriz.length; i++) {
-        for (let j = 0; j < matriz[i].length - 1; j++) {
-            var2 += matriz[i][j] + "y" + (j + 1);
-            if (j < matriz[i].length - 2) {
-                var2 += " + ";  
-            }
-        }
+        
         let bocasIgual = +document.getElementsByName('n'+(i+1))[0].value;
         
         if(bocasIgual==0){
-            var2 += ""+" = " + matriz[i][matriz[i].length - 1];
+            arregloComparadores.push(0);
         }else{
-            var2 += ""+bocas + matriz[i][matriz[i].length - 1];
+            arregloComparadores.push(bocas);
         }
-        if (i < matriz.length - 1) {
-            var2 += "\n";  
-        }
+        
     }
-    console.log(var1);
-    console.log(var2);
-    console.log(limites);
+    arregloLimites = [];
+    arregloValorLimites = [];
+    limites.forEach(element => {
+        if(element!=0){
+            arregloLimites.push(0);
+        }else{
+            arregloLimites.push(1);
+        }
+        arregloValorLimites.push(0);
+    });
+
+    localStorage.setItem('DUAL_cantidadVariables', cantidadRestricciones);
+    localStorage.setItem('DUAL_cantidadRestricciones', cantidadVariables);
+    localStorage.setItem('DUAL_objetivoFuncion', -objetivoFuncion);
+
+    localStorage.setItem('DUAL_arregloValorFuncionObjetivo', JSON.stringify(funObj));
+    localStorage.setItem('DUAL_restricciones', JSON.stringify(matriz));
+    localStorage.setItem('DUAL_arregloComparadores', JSON.stringify(arregloComparadores));
+    localStorage.setItem('DUAL_arregloLimites', JSON.stringify(arregloLimites));
+    localStorage.setItem('DUAL_arregloValorLimites', JSON.stringify(arregloValorLimites));
 }
