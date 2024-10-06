@@ -116,8 +116,8 @@
             var banderaError = +localStorage.getItem('banderaError');
             var formRespuesta = document.getElementById('formRespuesta');
             //banderaError = 0;
-            if(banderaError==1){
-                //SOLUCION
+            if (banderaError == 1) {
+                // SOLUCION
                 let solutions = JSON.parse(localStorage.getItem('solutions'));
                 var label = document.createElement('label');
                 label.textContent = 'Arreglo de solución:';
@@ -131,35 +131,34 @@
                 variables = JSON.parse(localStorage.getItem("varOriginal"));
                 // Crear la fila de encabezado con las variables
                 let resumenHeaderRow = document.createElement('tr');
+                let th = document.createElement('th');
+                th.textContent = 'Z';
+                resumenHeaderRow.appendChild(th);
                 variables.forEach(function(variable) {
                     let th = document.createElement('th');
                     th.textContent = variable;
                     resumenHeaderRow.appendChild(th);
                 });
-                let th = document.createElement('th');
-                th.textContent = 'Z';
-                resumenHeaderRow.appendChild(th);
+                
                 // Añadir el encabezado al tbody
                 resumenTbody.appendChild(resumenHeaderRow);
 
-                // Crear las filas de la matriz con los valores de resumenIteracion
-                solutions.forEach(function(fila) {
-                    let row = document.createElement('tr');
-
-                    // Añadir los valores de la matriz en esa fila
-                    fila.forEach(function(value) {
-                        let td = document.createElement('td');
-                        td.textContent = value;
-                        row.appendChild(td);
-                    });
-
-                    resumenTbody.appendChild(row);
+                // Crear una sola fila con los valores del arreglo solutions
+                let row = document.createElement('tr');
+                solutions.forEach(function(value) {
+                    let td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
                 });
+
+                // Añadir la fila al tbody
+                resumenTbody.appendChild(row);
 
                 // Añadir el tbody a la tabla y la tabla al contenedor de resumen
                 resumenTable.appendChild(resumenTbody);
                 formRespuesta.appendChild(resumenTable);
             }
+
             if(banderaError==2){
                 //ERROR DETECTADO
                 var label = document.createElement('label');

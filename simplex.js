@@ -9,6 +9,7 @@ let variables = JSON.parse(localStorage.getItem('arregloVariables'));
 let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
 console.log(variables);
 let nSol = +localStorage.getItem('cantidadSoluciones');
+
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
 //         [0, 1, 0, 1, 0, 3],
