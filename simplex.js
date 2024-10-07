@@ -67,15 +67,14 @@ function checkNextFase(){
   return 1;
 }
 
-function inicio(){
-  localStorage.setItem("banderaError", 0);
-  /*if (Dual){*/
+function inicio(flag){
+  if (flag){
     simplex();
-  /*}else{
+  }else{
     while (!solve){
       simplex();
     }
-  }*/
+  }
 }
 
 function simplex(){
