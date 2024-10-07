@@ -345,6 +345,7 @@ function guardarValores(primalODual){
     localStorage.setItem('cantidadVariables', cantidadVariables);
     localStorage.setItem('cantidadRestricciones', cantidadRestricciones);
     localStorage.setItem("banderaError", 0);
+    localStorage.setItem("bandera", 0);
     if(primalODual){
         window.location.href = "resultado.html";
     }

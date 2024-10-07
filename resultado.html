@@ -166,6 +166,7 @@
                 var label = document.createElement('label');
                 label.textContent = "Error: " + localStorage.getItem('mensajeError');
                 formRespuesta.appendChild(label); 
+                bandera = 1;
             }
 
 
@@ -276,6 +277,52 @@
                     formDual.appendChild(table);
                 } else {
                     console.error("No se encontraron los datos en localStorage");
+                }
+
+                // BLOQUE PRECIO SOMBRA
+                var banderaError = +localStorage.getItem('banderaError');
+                //banderaError = 0;
+                if (bandera && !(nSol>0)) {
+                    // SOLUCION
+                    let solutions = JSON.parse(localStorage.getItem('solutions'));
+                    var label = document.createElement('label');
+                    label.textContent = 'Arreglo de solución DUAL:';
+                    formDual.appendChild(label); 
+
+                    // Crear la tabla para el resumen de iteración
+                    let resumenTable = document.createElement('table');
+                    resumenTable.setAttribute('border', '1');
+                    let resumenTbody = document.createElement('tbody');
+
+                    variables = JSON.parse(localStorage.getItem("arregloVariablesSolucion"));
+                    // Crear la fila de encabezado con las variables
+                    let resumenHeaderRow = document.createElement('tr');
+                    let th = document.createElement('th');
+                    th.textContent = 'Z';
+                    resumenHeaderRow.appendChild(th);
+                    variables.forEach(function(variable) {
+                        let th = document.createElement('th');
+                        th.textContent = variable;
+                        resumenHeaderRow.appendChild(th);
+                    });
+                    
+                    // Añadir el encabezado al tbody
+                    resumenTbody.appendChild(resumenHeaderRow);
+
+                    // Crear una sola fila con los valores del arreglo solutions
+                    let row = document.createElement('tr');
+                    solutions.forEach(function(value) {
+                        let td = document.createElement('td');
+                        td.textContent = value;
+                        row.appendChild(td);
+                    });
+
+                    // Añadir la fila al tbody
+                    resumenTbody.appendChild(row);
+
+                    // Añadir el tbody a la tabla y la tabla al contenedor de resumen
+                    resumenTable.appendChild(resumenTbody);
+                    formDual.appendChild(resumenTable);
                 }
 
             }
