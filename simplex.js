@@ -262,6 +262,8 @@ function addIteracionResume(){
 }
 
 function desplegarSoluciones(){
+  let sombra = [];
+  let preciosSombra = JSON.parse(localStorage.getItem('preciosSombra'));
   let arrLimitFlag =  JSON.parse(localStorage.getItem('arregloLimites'));
   let arrLimit = JSON.parse(localStorage.getItem('arregloValorLimites'));
   let solutions = [];
@@ -273,6 +275,9 @@ function desplegarSoluciones(){
   }
    //console.log("z:", resumenIteracion[resumenIteracion.length-1][varOriginal.length]);
   for(let i = 0; i < varOriginal.length; i++){
+    if (varOriginal[i][0] == "s"){
+      sombra.push(matriz[0][i]);
+    }
     let keepGoing = 0;
     for (let j = filaZ+1; j < BVS.length; j++) {
       if (varOriginal[i]== BVS[j]){
@@ -307,6 +312,8 @@ function desplegarSoluciones(){
     }
     //console.log(varOriginal[i], ": ",resumenIteracion[resumenIteracion.length-1][i]);
   }
+  preciosSombra.push(sombra);
+  localStorage.setItem('preciosSombra', JSON.stringify(preciosSombra));
   localStorage.setItem('solutions', JSON.stringify(solutions));
   console.log("solutions: ", solutions);
 }
