@@ -21,10 +21,25 @@ body {
     border-radius: 10px;
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3);
     padding: 20px;
-    width: 50%;
-    max-width: 600px;
+    
+    min-width: 300px; /* Límite mínimo de ancho */
+    margin: 0 auto; /* Centrar horizontalmente */
     text-align: center;
+    overflow-x: auto; /* Permitir scroll horizontal */
+    overflow-y: auto; /* Permitir scroll vertical si el contenido excede el alto */
+    max-height: 80vh; /* Limitar la altura máxima al 80% del viewport */
+    white-space: nowrap; /* Evitar que el contenido se ajuste en varias líneas y forzar el scroll horizontal si es necesario */
 }
+
+/* Para pantallas pequeñas */
+@media (max-width: 600px) {
+    #formContainer {
+        padding: 10px; /* Reducir el padding en pantallas pequeñas */
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+        min-width: unset; /* Elimina el mínimo para evitar problemas en móviles */
+    }
+}
+
 
 /* Estilos para los elementos del formulario */
 p {
