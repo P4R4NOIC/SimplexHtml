@@ -19,14 +19,15 @@ body {
     background-color: #99d16d; /* Verde suave */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3);
     width: 300px;
 }
 
 label {
+    font-size: small;
     display: block;
     margin-bottom: 5px;
-    color: whitesmoke;
+    color: black;
 }
 
 select, input[type="text"], button {
@@ -54,9 +55,15 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #c9302c; /* Rojo más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+button:active {
+    background-color: #f28f8f;
+    transform: translateY(0);
 }

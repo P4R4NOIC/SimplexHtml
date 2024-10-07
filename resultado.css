@@ -89,10 +89,12 @@ button:disabled {
 button:hover {
     background-color: #86c55a; /* Verde más oscuro */
     transform: translateY(-2px); /* Efecto de "levantamiento" al hacer hover */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 button:active {
-    transform: translateY(0); /* Vuelve al estado original cuando el botón es presionado */
+    background-color: #99d16d;
+    transform: translateY(0);
 }
 
 button:last-of-type {

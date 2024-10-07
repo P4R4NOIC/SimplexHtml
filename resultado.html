@@ -116,7 +116,7 @@
             var banderaError = +localStorage.getItem('banderaError');
             var formRespuesta = document.getElementById('formRespuesta');
             //banderaError = 0;
-            if (banderaError == 1) {
+            if (bandera && !(nSol>0)) {
                 // SOLUCION
                 let solutions = JSON.parse(localStorage.getItem('solutions'));
                 var label = document.createElement('label');
@@ -168,7 +168,7 @@
 
 
             // BLOQUE RESUMEN
-            if (bandera == 1) {
+            if (bandera && !(nSol>0)) {
                 // Crear un contenedor para el resumen de iteración
                 var formResumen = document.getElementById('formResumen');
                 let resumenIteracion = JSON.parse(localStorage.getItem("resumenIteracion"));
