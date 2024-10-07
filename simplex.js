@@ -71,7 +71,6 @@ function inicio(flag){
   if (resumenIteracion.length == 0){
     addIteracionResume();
   }  
-  localStorage.setItem("banderaError", 0);
 
   if (flag){
     simplex();
