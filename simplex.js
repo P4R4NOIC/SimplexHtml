@@ -1,36 +1,27 @@
 //----------------------------------------------------------------------
 // let BVS = ["z", "s3", "s4", "s5"];
-let BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
-let sumaAZeta = +localStorage.getItem('sumaAZeta');
-console.log(sumaAZeta);
-console.log(BVS);
+let BVS;
+let sumaAZeta;
 // let variables = ["x1","x2", "s3", "s4", "s5"];
-let variables = JSON.parse(localStorage.getItem('arregloVariables'));
-let varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
-console.log(variables);
-let nSol = +localStorage.getItem('cantidadSoluciones');
+let variables;
+let varOriginal;
+let nSol;
 
 // let matriz = [[-15, -10, 0, 0, 0, 0], 
 //         [1, 0, 1, 0, 0, 2], 
 //         [0, 1, 0, 1, 0, 3],
 //         [1, 1, 0, 0, 1, 4]];
-let matriz = JSON.parse(localStorage.getItem('matriz'));
+let matriz;
 console.log(matriz);
-let filaZ = +localStorage.getItem('filaZ');
-console.log("FILAZ: ", filaZ);
+let filaZ;
 let row;
 let col;
 //let M = 1000;
-let solve = +localStorage.getItem('bandera');
-let M = +localStorage.getItem('BIGNUMBER');
+let solve;
+let M;
 // let FoG = 0;
-let FoG = +localStorage.getItem('metodoSolucionFinal');
-console.log("FOG: ", FoG);
-let resumenIteracion = JSON.parse(localStorage.getItem('resumenIteracion'));
-if (resumenIteracion.length == 0){
-  addIteracionResume();
-}
-console.log("resumenIteracion: ", resumenIteracion);
+let FoG;
+let resumenIteracion;
 
 
 function checkNextFase(){
@@ -67,14 +58,34 @@ function checkNextFase(){
   return 1;
 }
 
-function inicio(flag){
-  if (flag){
+function inicio(){
+  BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
+  sumaAZeta = +localStorage.getItem('sumaAZeta');
+  // let variables = ["x1","x2", "s3", "s4", "s5"];
+  variables = JSON.parse(localStorage.getItem('arregloVariables'));
+  varOriginal = JSON.parse(localStorage.getItem('varOriginal'));
+  nSol = +localStorage.getItem('cantidadSoluciones');
+  matriz = JSON.parse(localStorage.getItem('matriz'));
+  filaZ = +localStorage.getItem('filaZ');
+  
+  //let M = 1000;
+  solve = +localStorage.getItem('bandera');
+  M = +localStorage.getItem('BIGNUMBER');
+  // let FoG = 0;
+  FoG = +localStorage.getItem('metodoSolucionFinal');
+  resumenIteracion = JSON.parse(localStorage.getItem('resumenIteracion'));
+  if (resumenIteracion.length == 0){
+    addIteracionResume();
+  }  
+  localStorage.setItem("banderaError", 0);
+
+  //if (flag){
     simplex();
-  }else{
-    while (!solve){
-      simplex();
-    }
-  }
+  //}else{
+  //  while (!solve){
+  //    simplex();
+  //  }
+  //}
 }
 
 function simplex(){
