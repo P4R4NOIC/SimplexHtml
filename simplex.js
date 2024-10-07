@@ -81,6 +81,7 @@ function inicio(flag){
       inicio(0);
     }
   }
+  location.reload();
 }
 
 function simplex(){
@@ -113,7 +114,7 @@ function simplex(){
   console.log(BVS);
   console.log(matriz);
   console.log("resumenIteracion: ", resumenIteracion);
-  location.reload();
+  
 }
 
 function opRow(row1, row2, n){
