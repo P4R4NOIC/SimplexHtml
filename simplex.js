@@ -314,24 +314,29 @@ function desplegarSoluciones(){
 
 function darRespuesta(r){
   if (r == 1){
+    localStorage.setItem("bandera", 1);
     console.log("no se pueden dar mas soluciones\n");
   }
   if (r == 2){
     console.log("ya se dieron todas las iteraciones solicitadas\n");
+    localStorage.setItem("bandera", 1);
   }
   if (r == 3){
     //console.log("no hay variables negativas para escoger");
     localStorage.setItem("mensajeError", "No hay variables negativas para escoger");
+    localStorage.setItem("bandera", 1);
     localStorage.setItem("banderaError", 2);
   }
   if (r == 4){
     //console.log("Problema no acotado\n");
     localStorage.setItem("mensajeError", "Problema no acotado");
+    localStorage.setItem("bandera", 1);
     localStorage.setItem("banderaError", 2);
   }
   if (r == 5){
     //console.log("Problema infactible RHS negativo al final de la primera Fase");
     localStorage.setItem("mensajeError", "Problema infactible RHS negativo al final de la primera Fase");
+    localStorage.setItem("bandera", 1);
     localStorage.setItem("banderaError", 2);
   }
   if (r == 6){
