@@ -118,7 +118,7 @@
             var banderaError = +localStorage.getItem('banderaError');
             var formRespuesta = document.getElementById('formRespuesta');
             //banderaError = 0;
-            if (bandera && !(nSol>0)) {
+            if (bandera && !(nSol>0) && banderaError==1) {
                 // SOLUCION
                 let solutions = JSON.parse(localStorage.getItem('solutions'));
                 var label = document.createElement('label');
@@ -282,7 +282,7 @@
                 // BLOQUE PRECIO SOMBRA
                 var banderaError = +localStorage.getItem('banderaError');
                 //banderaError = 0;
-                if (bandera && !(nSol>0)) {
+                if (bandera && !(nSol>0) && banderaError==1) {
                     // SOLUCION
                     let solutions = JSON.parse(localStorage.getItem('solutions'));
                     var label = document.createElement('label');
@@ -323,6 +323,75 @@
                     // Añadir el tbody a la tabla y la tabla al contenedor de resumen
                     resumenTable.appendChild(resumenTbody);
                     formDual.appendChild(resumenTable);
+
+
+                    let preciosSombra = JSON.parse(localStorage.getItem('preciosSombra'));
+
+                    if (preciosSombra && preciosSombra.length > 0) {
+                        // Crear el label
+                        let label = document.createElement('label');
+                        label.textContent = 'Matriz de Precios Sombra:';
+                        formDual.appendChild(label); // Agregar el label al cuerpo del documento o a un contenedor específico
+
+                        // Crear la tabla
+                        let preciosTable = document.createElement('table');
+                        preciosTable.setAttribute('border', '1');
+
+                        let preciosTbody = document.createElement('tbody');
+
+                        // Crear la fila de encabezado
+                        let headerRow = document.createElement('tr');
+                        // Suponiendo que la primera fila contiene los nombres de las columnas (si es necesario)
+                        let firstRow = preciosSombra[0];
+                        let th = document.createElement('th');
+                        th.textContent = ``; // Cambia a nombres personalizados si es necesario
+                        headerRow.appendChild(th);
+                        firstRow.forEach(function(colHeader, index) {
+                            let th = document.createElement('th');
+                            th.textContent = `x${index + 1}`; // Cambia a nombres personalizados si es necesario
+                            headerRow.appendChild(th);
+                        });
+
+                        // Añadir el encabezado al tbody
+                        preciosTbody.appendChild(headerRow);
+
+                        // Crear las filas con los valores de preciosSombra
+                        preciosSombra.forEach(function(rowData, rowIndex) {
+                            let row = document.createElement('tr');
+
+                            // Agregar "Primal" para la primera fila y "Dual" para la segunda
+                            let tdLabel = document.createElement('td');
+                            tdLabel.textContent = rowIndex === 0 ? 'Primal' : 'Dual'; // Primera fila es "Primal", segunda es "Dual"
+                            row.appendChild(tdLabel);
+
+                            // Añadir los valores de la fila de preciosSombra
+                            rowData.forEach(function(value) {
+                                let td = document.createElement('td');
+                                td.textContent = value;
+                                row.appendChild(td);
+                            });
+
+                            // Añadir la fila al tbody
+                            preciosTbody.appendChild(row);
+                        });
+
+                        // Añadir el tbody a la tabla
+                        preciosTable.appendChild(preciosTbody);
+
+                        // Añadir la tabla al cuerpo del documento o a un contenedor específico
+                        formDual.appendChild(preciosTable);
+                    } else {
+                        console.log('No se encontraron datos en preciosSombra.');
+                    }
+
+
+                }
+                
+                if(banderaError==2){
+                    //ERROR DETECTADO
+                    var label = document.createElement('label');
+                    label.textContent = "Error: " + localStorage.getItem('mensajeError');
+                    formDual.appendChild(label); 
                 }
 
             }

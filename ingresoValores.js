@@ -372,6 +372,7 @@ function validarEntrada(){
 
     // Si todo es correcto, continuar con el flujo
     alert("Todos los campos son válidos.");
+    localStorage.setItem('preciosSombra', JSON.stringify([]));
     obtenerValoresPrimal();
     calcularDual();
     guardarValores(1);
@@ -454,9 +455,15 @@ function calcularDual(){
         arregloValorLimites.push(0);
     });
 
+    if(objetivoFuncion==1){
+        objetivoFuncion=0;
+    }else{
+        objetivoFuncion=1;
+    }
+
     localStorage.setItem('DUAL_cantidadVariables', cantidadRestricciones);
     localStorage.setItem('DUAL_cantidadRestricciones', cantidadVariables);
-    localStorage.setItem('DUAL_objetivoFuncion', -objetivoFuncion);
+    localStorage.setItem('DUAL_objetivoFuncion', objetivoFuncion);
 
     localStorage.setItem('DUAL_arregloValorFuncionObjetivo', JSON.stringify(funObj));
     localStorage.setItem('DUAL_restricciones', JSON.stringify(matriz));
