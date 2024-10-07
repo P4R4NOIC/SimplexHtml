@@ -75,13 +75,13 @@ function inicio(flag){
 
   if (flag){
     simplex();
+    location.reload();
   }else{
     if (!solve){
       simplex();
       inicio(0);
     }
   }
-  location.reload();
 }
 
 function simplex(){
