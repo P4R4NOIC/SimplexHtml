@@ -58,7 +58,7 @@ function checkNextFase(){
   return 1;
 }
 
-function inicio(){
+function inicio(flag){
   BVS = JSON.parse(localStorage.getItem('arregloVariablesBasicas'));
   sumaAZeta = +localStorage.getItem('sumaAZeta');
   // let variables = ["x1","x2", "s3", "s4", "s5"];
@@ -79,13 +79,13 @@ function inicio(){
   }  
   localStorage.setItem("banderaError", 0);
 
-  //if (flag){
+  if (flag){
     simplex();
-  //}else{
-  //  while (!solve){
-  //    simplex();
-  //  }
-  //}
+  }else{
+    while (!solve){
+      simplex();
+    }
+  }
 }
 
 function simplex(){
