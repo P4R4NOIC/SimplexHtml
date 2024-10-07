@@ -1,4 +1,3 @@
-//----------------------------------------------------------------------
 // let BVS = ["z", "s3", "s4", "s5"];
 let BVS;
 let sumaAZeta;
@@ -6,11 +5,6 @@ let sumaAZeta;
 let variables;
 let varOriginal;
 let nSol;
-
-// let matriz = [[-15, -10, 0, 0, 0, 0], 
-//         [1, 0, 1, 0, 0, 2], 
-//         [0, 1, 0, 1, 0, 3],
-//         [1, 1, 0, 0, 1, 4]];
 let matriz;
 console.log(matriz);
 let filaZ;
@@ -82,8 +76,9 @@ function inicio(flag){
   if (flag){
     simplex();
   }else{
-    while (!solve){
+    if (!solve){
       simplex();
+      inicio(0);
     }
   }
 }
