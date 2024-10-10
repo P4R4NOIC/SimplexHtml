@@ -288,27 +288,75 @@ function guardarValores(primalODual){
         restricciones.unshift(arregloW);
     }
     
-    
+    console.log("ENTRA");
+    console.log(JSON.stringify(restricciones));
+    console.log(JSON.stringify(arregloVariables));
     // Chequeo de variables sin limite
-    let contador = 0;
-    for (let i = 1; i <= +cantidadVariables; i++) {
-        // arregloLimites = 1: Tiene limite negativo
-        // arregloLimites = 0: Sin limite
-        let xp = "";
-        let xpp = "";
-        if(arregloLimites[i-1] == 0){
-            xp = "x"+i+"p";
-            xpp = "x"+i+"pp";
-            arregloVariables.splice(i-1+contador, 1, xp, xpp);
+    let nuevoArregloVariables = [];
+    let nuevasRestricciones = [];
 
-            for (let j = 1; j <= restricciones.length; j++) {
-                let valor = restricciones[j-1][i-1];
-                restricciones[j-1].splice(i-1+contador,1,valor,-valor);
+    // Genera el nuevo arreglo de variables y restricciones
+    for (let i = 1; i <= +cantidadVariables; i++) {
+        if (arregloLimites[i - 1] == 0) {
+            // Variable sin límite, agregamos las versiones positiva y negativa
+            nuevoArregloVariables.push("x" + i + "p", "x" + i + "pp");
+
+            // Duplica los valores en restricciones con signos opuestos
+            for (let j = 0; j < restricciones.length; j++) {
+                if (!nuevasRestricciones[j]) {
+                    nuevasRestricciones[j] = [];
+                }
+                let valor = restricciones[j][i - 1];
+                nuevasRestricciones[j].push(valor, -valor);
             }
-            
-            contador = contador + 2;
+        } else {
+            // Variable con límite, se copia tal cual
+            nuevoArregloVariables.push(arregloVariables[i - 1]);
+
+            // Copia los valores originales en restricciones
+            for (let j = 0; j < restricciones.length; j++) {
+                if (!nuevasRestricciones[j]) {
+                    nuevasRestricciones[j] = [];
+                }
+                nuevasRestricciones[j].push(restricciones[j][i - 1]);
+            }
         }
     }
+
+    // Copia el resto de las variables que no tienen chequeo de límites
+    for (let i = cantidadVariables; i < arregloVariables.length; i++) {
+        nuevoArregloVariables.push(arregloVariables[i]);
+    }
+
+    // Copia el resto de las columnas de restricciones sin modificación
+    for (let j = 0; j < restricciones.length; j++) {
+        for (let k = cantidadVariables; k < restricciones[j].length; k++) {
+            nuevasRestricciones[j].push(restricciones[j][k]);
+        }
+    }
+
+    // Asigna los nuevos arreglos a los originales
+    arregloVariables = nuevoArregloVariables;
+    restricciones = nuevasRestricciones;
+
+
+    console.log("SALE");
+    console.log(JSON.stringify(restricciones));
+    console.log(JSON.stringify(arregloVariables));
+
+    // arregloVariables = ["x1","x2","s3","s4","a5","a6"]
+    // restricciones = [
+    // [4,8,0,0,400,400,0],
+    // [1,0,-1,0,1,0,2],
+    // [1,4,0,-1,0,1,4]]
+
+
+    // arregloVariables = ["x1p","x1pp","x2p","x2pp","s3","s4","a5","a6"]
+    // restricciones = [[4,-4,8,-8,0,0,400,400,0],
+    // [1,-1,0,0,-1,0,1,0,2],
+    // [1,-1,4,-4,0,-1,0,1,4]]
+
+    
 
     localStorage.setItem('BIGNUMBER', BIGNUMBER);
 
@@ -429,7 +477,6 @@ function calcularDual(){
     }
     matriz = matrizTranspuesta(matriz, cantidadVariables, cantidadRestricciones, funObj, distintos, limites);
     
-    let var2 = "";
     let arregloComparadores = [];
     let bocas = 1;
     if(distintos==1){bocas = -1}
